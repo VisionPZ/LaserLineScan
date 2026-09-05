@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
+
+# Toolchain and build output.
+node_modules/
+dist/
+build/
+
+# Logs and OS cruft.
+*.log
+.DS_Store
+
+# Generated multi-gigabyte capture datasets and their compressed volumes.
+# See README.md ("Datasets") — these are build inputs, not source.
+hd/
+hd-mono/
+datasets/
+calibration-datasets/
+validation-datasets/
+*.f32
+*.f32.gz
+
+# Exception: the small demo truth volumes in demo/ are committed with the
+# package so its manifests are complete without the HD capture tree.
+!demo/**/*.f32.gz
+
+# Exception: the trained row-gate weights are small and ship with the runtime.
+!runtime/rows-pca.f32
+
+# Python virtual environment used by the browser suites.
+.venv/
+__pycache__/
+*.pyc
