@@ -1,0 +1,40 @@
+{
+  "name": "laser-scan",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "description": "An open laser-perception kit: a browser-only structured-light laser scanner built from ES modules, Web Workers and a WebAssembly kernel compiled from AssemblyScript.",
+  "license": "GPL-3.0-or-later",
+  "author": {
+    "name": "Ping Zhao",
+    "email": "ping.zhao@nidvue.com",
+    "url": "https://nidvue.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VisionPZ/LaserLineScan.git"
+  },
+  "homepage": "https://github.com/VisionPZ/LaserLineScan#readme",
+  "bugs": {
+    "url": "https://github.com/VisionPZ/LaserLineScan/issues"
+  },
+  "keywords": [
+    "laser",
+    "structured-light",
+    "laser-triangulation",
+    "3d-scanning",
+    "computer-vision",
+    "webassembly",
+    "assemblyscript",
+    "webgl",
+    "webgpu",
+    "point-cloud"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "serve": "node serve.mjs",
+    "test": "node --test tests/"
+  }
+}
