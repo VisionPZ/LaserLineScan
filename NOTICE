@@ -1,0 +1,47 @@
+Laser Scan - an open laser-perception kit
+Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
+
+This product includes software developed at Nidvue (https://nidvue.com).
+
+The following files are licensed under the GNU General Public License,
+version 3 or (at your option) any later version (GPL-3.0-or-later); see
+LICENSE in this directory. They cover the complete laser-perception pipeline:
+spectral illumination design, camera/laser calibration, sub-pixel stripe
+extraction, search-band extraction, scatter recovery and dense 3D
+reconstruction.
+
+  board-pose.js         camera intrinsics/distortion and board pose
+  charuco-board.js      ChArUco target geometry
+  charuco-worker.js     ChArUco corner detection and calibration
+  encoder-model.js      affine command-to-plane (galvanometer) mapping
+  stripe-roi.js         calibration-derived geometric search region
+  scatter.js            scatter-tail and saturated-shoulder recovery
+  rows-pca.js/.json/.f32 trained row-level laser gate
+  spectral.js           spectral design model (lamp/laser/filter/sensor)
+  spectral-gl.js        WebGPU/WebGL preview of the spectral design
+  spectral-plot.js      spectrum plotting widget
+  viewer.js             3D point-cloud viewer
+  rig-scene.js          rig schematic
+  image-preview.js      frame preview widget
+  calibration-report.js Markdown / PowerPoint calibration report
+  locale.js             number and date formatting
+  lab.css               laboratory styles
+  core.wasm / oss.ts    kernel: Steger/Hessian extraction, plane fits
+
+Additional term under GPL-3.0 section 7(b): any product that uses, modifies or
+distributes this software must preserve the attribution "Laser Scan, Copyright
+(C) 2026 Ping Zhao <ping.zhao@nidvue.com>" in its user interface (for example an
+about screen, credits or footer), in its documentation and in its source
+headers. Commercial use is permitted under GPL-3.0-or-later; distributing a
+product built on it requires releasing that product's complete corresponding
+source under GPL-3.0-or-later.
+
+Third-party components bundled under vendor/:
+
+  OpenCV.js 4.13.0         Apache License 2.0 (see vendor/OPENCV-LICENSE.txt)
+  PptxGenJS 4.0.1          MIT License        (see vendor/PPTXGENJS-LICENSE.txt)
+
+GPL-3.0-or-later does not grant rights to the Nidvue name, logos, mascots or
+other trademarks. The complete pipeline is published: there is no separate
+component, no boundary configuration and no remote service. See
+../../LICENSING.md for the full licence note.
