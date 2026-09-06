@@ -1,0 +1,80 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test and licence headers
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # No dependencies, so there is nothing to install. Run the project's test
+      # script when package.json defines one, otherwise fall back to node --test.
+      - name: Test
+        shell: bash
+        run: |
+          # Early revisions have no tests yet; the job is honest about that
+          # instead of failing on a directory that does not exist.
+          if [ ! -d tests ]; then
+            echo "no tests in this revision yet - nothing to run"
+            exit 0
+          fi
+          if node -e "const s = require('./package.json').scripts || {}; process.exit(s.test ? 0 : 1)"; then
+            npm test
+          else
+            node --test tests/
+          fi
+
+      # Every SPDX-License-Identifier in the project must be GPL-3.0-or-later.
+      # The licence/attribution files are exempt because they carry the full
+      # texts rather than a per-file header.
+      - name: Check licence headers
+        shell: bash
+        env:
+          SPDX_ALLOW: 'LICENSE|NOTICE'
+        run: |
+          set -euo pipefail
+          failed=0
+          while IFS= read -r file; do
+            rel="${file#./}"
+            if grep -Eq "^(${SPDX_ALLOW})$" <<<"$rel"; then
+              continue
+            fi
+            id="$(grep -Im1 -oE 'SPDX-License-Identifier:[[:space:]]*[^[:space:]*#/]+' "$file" | sed -E 's/.*:[[:space:]]*//' || true)"
+            if [ -n "$id" ] && [ "$id" != "GPL-3.0-or-later" ]; then
+              echo "::error file=${rel}::SPDX-License-Identifier is '${id}', expected 'GPL-3.0-or-later'"
+              failed=1
+            fi
+          done < <(find . -type f \
+            -not -path './.git/*' \
+            -not -path './node_modules/*' \
+            -not -path './dist/*' \
+            -not -path './build/*' \
+            | sort)
+          if [ "$failed" -ne 0 ]; then
+            echo "One or more files carry a non-GPL licence header." >&2
+            exit 1
+          fi
+          echo "All SPDX-License-Identifier headers are GPL-3.0-or-later."
+
+  # The browser probe is slow (it drives a full calibration and scan), so it
+  # runs only on main and on manual dispatch; pull requests stay fast.
