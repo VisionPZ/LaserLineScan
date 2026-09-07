@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
+cff-version: 1.2.0
+message: "If you use laser-scan in academic work, please cite it as below."
+title: "laser-scan: a browser-only structured-light laser scanner"
+abstract: >-
+  An open laser-perception kit: a browser-only structured-light laser scanner
+  built from ES modules, Web Workers and a WebAssembly kernel compiled from
+  AssemblyScript. It covers spectral illumination design, camera/laser rig
+  geometry, ChArUco calibration, object scanning and dense 3D reconstruction
+  with PLY and JSON export, entirely on the client.
+type: software
+authors:
+  - family-names: Zhao
+    given-names: Ping
+    affiliation: Nidvue
+    email: ping.zhao@nidvue.com
+version: "1.0.0"
+date-released: "2026-09-20"
+license: GPL-3.0-or-later
+repository-code: "https://github.com/VisionPZ/LaserLineScan"
+url: "https://github.com/VisionPZ/LaserLineScan"
+keywords:
+  - laser scanning
+  - structured light
+  - laser triangulation
+  - computer vision
+  - WebAssembly
+  - AssemblyScript
+  - 3D reconstruction
