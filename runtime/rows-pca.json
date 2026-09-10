@@ -1,0 +1,13 @@
+{
+  "region": "lower",
+  "split": 540,
+  "stride": 8,
+  "dim": 240,
+  "k": 16,
+  "variance": 0.9,
+  "threshold": 570.4344420111486,
+  "quantile": 0.91,
+  "frames": 192,
+  "rows": 103680,
+  "explained": 0.9020706058432206
+}
