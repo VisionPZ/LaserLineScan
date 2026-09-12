@@ -1,0 +1,213 @@
+{
+  "id": "moving-board-bin",
+  "split": "validation",
+  "version": "2.0.0",
+  "width": 1920,
+  "height": 1080,
+  "fx": 1665,
+  "fy": 1665,
+  "cx": 960,
+  "cy": 540,
+  "truth": {
+    "fx": 1480,
+    "fy": 1480,
+    "cx": 960,
+    "cy": 540
+  },
+  "unitMm": 100,
+  "direction": "top-down",
+  "scanTopology": "ordered-horizontal",
+  "provenance": "Native 1920x1080 Cycles renders, original meshes and materials, geometry-driven laser response; no source photos or image enlargement.",
+  "coordinateSystem": "Camera: X right, Y down, Z forward; mm",
+  "limitations": "Synthetic acquisition with a simulated brown lens [-0.18, 0.045, 0.001, -0.0015, -0.008]; approximate radiometry. Accuracy is evaluated against synthetic geometry, not physical measurements.",
+  "lens": {
+    "model": "brown",
+    "coefficients": [
+      -0.18,
+      0.045,
+      0.001,
+      -0.0015,
+      -0.008
+    ]
+  },
+  "calibrationId": "charuco-moving-board",
+  "rigId": "charuco-moving-board",
+  "scene": "bin",
+  "name": "Robot bin picking",
+  "object": "Cartons in a component tote",
+  "acquisition": "moving-board",
+  "validation": [
+    {
+      "file": "validation-000.jpg",
+      "t": 0,
+      "command": 0,
+      "translation": [
+        0,
+        1.1993392346849503,
+        0
+      ],
+      "sha256": "84c068bee18d2a9d74732bc38ddae530bdb3ffec6568e34a5d30d249b6415e48",
+      "stripeColumns": 1054,
+      "truth": "validation-truth-000.f32.gz"
+    },
+    {
+      "file": "validation-017.jpg",
+      "t": 0.08900523560209424,
+      "command": 0,
+      "translation": [
+        0,
+        0.9592432167850635,
+        0
+      ],
+      "sha256": "1de9fa61cff66e1b097e1d3ead4f8aad82decc5dd3ddc34e6504da579b813697",
+      "stripeColumns": 564,
+      "truth": "validation-truth-017.f32.gz"
+    },
+    {
+      "file": "validation-035.jpg",
+      "t": 0.18324607329842932,
+      "command": 0,
+      "translation": [
+        0,
+        0.7050239037145953,
+        0
+      ],
+      "sha256": "146d56be7ad0e8b19596fd12e47b1ca68b43f9625cbe195ecfde43124acae273",
+      "stripeColumns": 746,
+      "truth": "validation-truth-035.f32.gz"
+    },
+    {
+      "file": "validation-052.jpg",
+      "t": 0.27225130890052357,
+      "command": 0,
+      "translation": [
+        0,
+        0.46492788581470856,
+        0
+      ],
+      "sha256": "4c0732f520b19299187a32e8c3f0d4aefd7bb3edb0bc32f6dcc8968f242ba09d",
+      "stripeColumns": 1059,
+      "truth": "validation-truth-052.f32.gz"
+    },
+    {
+      "file": "validation-069.jpg",
+      "t": 0.3612565445026178,
+      "command": 0,
+      "translation": [
+        0,
+        0.22483186791482224,
+        0
+      ],
+      "sha256": "19358608a5677450ce40c8a20c86bb73f517b0dd4a7d2cca6df61853b52b0dda",
+      "stripeColumns": 775,
+      "truth": "validation-truth-069.f32.gz"
+    },
+    {
+      "file": "validation-087.jpg",
+      "t": 0.45549738219895286,
+      "command": 0,
+      "translation": [
+        0,
+        -0.029387445155645953,
+        0
+      ],
+      "sha256": "31d074a4a1f4188fe0b124c8c2eb2d5bc4deff92af2b50904a03e213f16bcf4f",
+      "stripeColumns": 722,
+      "truth": "validation-truth-087.f32.gz"
+    },
+    {
+      "file": "validation-104.jpg",
+      "t": 0.5445026178010471,
+      "command": 0,
+      "translation": [
+        0,
+        -0.2694834630555327,
+        0
+      ],
+      "sha256": "761ccdacb036fa8245daf72c547c333f3f621a8cba385e49e23f8338bf8251b0",
+      "stripeColumns": 1086,
+      "truth": "validation-truth-104.f32.gz"
+    },
+    {
+      "file": "validation-122.jpg",
+      "t": 0.6387434554973822,
+      "command": 0,
+      "translation": [
+        0,
+        -0.5237027761260009,
+        0
+      ],
+      "sha256": "f64e4cb84fd1e408ce06c7025f1c67091d67f97eebed3d3814e18fab8c600cb3",
+      "stripeColumns": 1101,
+      "truth": "validation-truth-122.f32.gz"
+    },
+    {
+      "file": "validation-139.jpg",
+      "t": 0.7277486910994765,
+      "command": 0,
+      "translation": [
+        0,
+        -0.7637987940258877,
+        0
+      ],
+      "sha256": "e8b2378f7e457d228d86ad76c415e290014e50a388576d28716426aa88a4e82f",
+      "stripeColumns": 1107,
+      "truth": "validation-truth-139.f32.gz"
+    },
+    {
+      "file": "validation-156.jpg",
+      "t": 0.8167539267015707,
+      "command": 0,
+      "translation": [
+        0,
+        -1.003894811925774,
+        0
+      ],
+      "sha256": "d4fa4fc474a77288714dd3a08fb875e87d11f7b385f5aa2b0944c0235f1ede62",
+      "stripeColumns": 1217,
+      "truth": "validation-truth-156.f32.gz"
+    },
+    {
+      "file": "validation-174.jpg",
+      "t": 0.9109947643979057,
+      "command": 0,
+      "translation": [
+        0,
+        -1.2581141249962422,
+        0
+      ],
+      "sha256": "3aa8d4e915824a76fce2cdc3b2094a025f8b96c189beb6b42d351acf1a96555c",
+      "stripeColumns": 139,
+      "truth": "validation-truth-174.f32.gz"
+    },
+    {
+      "file": "validation-191.jpg",
+      "t": 1,
+      "command": 0,
+      "translation": [
+        0,
+        -1.498210142896129,
+        0
+      ],
+      "sha256": "b3b782b97aed8d0325001858dff990a2063c9ab58d775c5a5036511e4faf1745",
+      "stripeColumns": 1262,
+      "truth": "validation-truth-191.f32.gz"
+    }
+  ],
+  "lineCount": 12,
+  "scanMotion": "Rigid camera and laser head translate together on the vertical stage with a fixed baseline; the object stays stationary and each frame records the rig displacement (standalone demo: 12 of 192 rendered lines)",
+  "downloadFormat": "JPEG",
+  "downloadQuality": 96,
+  "objectDepth": [
+    3.4,
+    4.7
+  ],
+  "objectBox": [
+    -1.6,
+    1.6,
+    -1.7,
+    1.6,
+    3.4,
+    4.7
+  ]
+}
