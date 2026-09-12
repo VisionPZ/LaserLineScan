@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 281 70" width="281" height="70">
+  <title>NIDVUE</title>
+  <g transform="translate(0,7) scale(0.2188)">
+      <path d="M78 34H34V78 M178 34H222V78 M222 178V222H178 M78 222H34V178" fill="none" stroke="#5857E8" stroke-width="13" stroke-linecap="square" stroke-linejoin="miter" opacity="0.92"/>
+      <path d="M64 54H96L160 151V72L192 40V202H160L96 105V184L64 216Z" fill="#A09FFF" transform="translate(17.92 17.92) scale(.86)"/>
+  </g>
+  <text x="72" y="48" font-family="Inter,sans-serif" font-weight="600" font-size="48" letter-spacing="3.84" fill="#A09FFF">NIDVUE</text>
+</svg>
