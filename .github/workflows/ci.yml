@@ -78,3 +78,32 @@ jobs:
 
   # The browser probe is slow (it drives a full calibration and scan), so it
   # runs only on main and on manual dispatch; pull requests stay fast.
+  integration:
+    name: Browser probe (Playwright)
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Playwright and Chromium
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          playwright install --with-deps chromium
+
+      - name: Run the browser probe
+        shell: bash
+        run: |
+          export NIDVUE_CHROMIUM="$(python -c 'from playwright.sync_api import sync_playwright; p = sync_playwright().start(); print(p.chromium.executable_path); p.stop()')"
+          echo "Using Chromium at ${NIDVUE_CHROMIUM}"
+          python tests/smoke.py
