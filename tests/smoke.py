@@ -69,10 +69,13 @@ try:
         expect(page.locator("#ll-start")).to_be_enabled(timeout=30000)
         assert page.locator("#ll-setup-section").is_visible()
 
-        # Wizard: optics -> rig -> calibration.
-        page.click("#ll-to-rig")
+        # Wizard: optics -> rig -> calibration, driven from the stepper so the
+        # probe never depends on which continue button happens to be on screen.
+        page.click('.ll-stepper [data-step="1"]')
+        page.wait_for_function("document.querySelector('#laser-lab').dataset.step==='1'")
         expect(page.locator("#ll-rig-section")).to_be_visible()
-        page.click("#ll-to-calibration")
+        page.click('.ll-stepper [data-step="2"]')
+        page.wait_for_function("document.querySelector('#laser-lab').dataset.step==='2'")
         expect(page.locator("#ll-calibration-section")).to_be_visible()
         # The packaged demo's default rig is charuco-moving-board. Its validation
         # split is intentionally small (12 frames), so the end-to-end point-count
@@ -94,6 +97,7 @@ try:
 
         # Object scan at full speed.
         page.click("#ll-to-validation")
+        page.wait_for_function("document.querySelector('#laser-lab').dataset.step==='3'")
         page.select_option("#ll-v-speed", "0")
         page.click("#ll-validate")
         page.wait_for_function("!document.querySelector('#laser-lab').classList.contains('is-running')", timeout=240000)
