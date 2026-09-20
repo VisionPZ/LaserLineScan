@@ -18,7 +18,7 @@ const out = join(packageRoot, 'runtime', 'core.wasm');
 const asc = join(packageRoot, 'node_modules', '.bin', 'asc');
 
 if (!existsSync(source)) {
-  console.error('kernel/oss.ts is missing — this does not look like the laser-scan package.');
+  console.error('kernel/oss.ts is missing — this does not look like the laser-line-scan package.');
   process.exit(1);
 }
 if (!existsSync(asc)) {

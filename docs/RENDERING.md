@@ -3,7 +3,7 @@
 
 # Rendering
 
-laser-scan has two independent drawing paths. The **frame renderer** re-renders
+laser-line-scan has two independent drawing paths. The **frame renderer** re-renders
 a reference capture under the designed illumination (step 00) and is the one
 with a WebGPU → WebGL2 → CPU fallback chain. The **3D viewer**
 ([`../runtime/viewer.js`](../runtime/viewer.js), class `ScanViewer`) draws both

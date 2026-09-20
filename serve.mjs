@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
-// Zero-dependency static server for the standalone laser-scan package.
+// Zero-dependency static server for the standalone laser-line-scan package.
 // `node serve.mjs` -> http://localhost:8080 (override with PORT / --port).
 import { createReadStream, existsSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
@@ -22,4 +22,4 @@ const server = createServer((req, res) => {
   res.writeHead(200, { 'content-type': types[extname(file).toLowerCase()] || 'application/octet-stream', 'cache-control': 'no-cache' });
   createReadStream(file).pipe(res);
 });
-server.listen(port, () => console.log(`laser-scan serving ${root}\n  http://localhost:${port}`));
+server.listen(port, () => console.log(`laser-line-scan serving ${root}\n  http://localhost:${port}`));

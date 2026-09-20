@@ -16,7 +16,7 @@ The project's test command discovers everything under `tests/`, including
 subdirectories:
 
 ```bash
-cd open-source/laser-scan
+cd open-source/laser-line-scan
 node --test tests/   # or: npm test
 ```
 
@@ -80,7 +80,7 @@ Run it from the repository root:
 ```bash
 NIDVUE_CHROMIUM=~/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome \
   /home/pingz/Code/Nidvue/Websites/Source/.venv/bin/python \
-  open-source/laser-scan/tests/smoke.py
+  open-source/laser-line-scan/tests/smoke.py
 ```
 
 Environment variables:

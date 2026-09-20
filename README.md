@@ -3,13 +3,13 @@
   Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 -->
 
-# laser-scan
+# laser-line-scan
 
 [![Licence: GPL-3.0-or-later](https://img.shields.io/badge/licence-GPL--3.0--or--later-blue.svg)](LICENSE)
 [![CI](https://github.com/VisionPZ/LaserLineScan/actions/workflows/ci.yml/badge.svg)](https://github.com/VisionPZ/LaserLineScan/actions/workflows/ci.yml)
 [![Browser-only: no server, nothing uploaded](https://img.shields.io/badge/browser--only-no_server%2C_nothing_uploaded-success.svg)](#quick-start)
 
-**laser-scan** is a browser-only structured-light laser scanner. It walks a full
+**laser-line-scan** is a browser-only structured-light laser scanner. It walks a full
 laser-perception pipeline — 00 optics, 01 rig, 02 calibration, 03 object scan,
 04 dense 3D result — in ES modules, Web Workers and a WebAssembly kernel
 compiled from AssemblyScript. Everything runs **on your machine**: no server, no
@@ -24,7 +24,7 @@ modern browser.
 
 ```sh
 git clone https://github.com/VisionPZ/LaserLineScan.git
-cd laser-scan
+cd laser-line-scan
 node serve.mjs
 # open http://localhost:8080
 ```
@@ -168,23 +168,23 @@ The repository ships prebuilt artefacts so a fresh clone runs with no toolchain.
 
 ## Licence and attribution
 
-laser-scan is released under the **GNU General Public License, version 3 or
+laser-line-scan is released under the **GNU General Public License, version 3 or
 later (GPL-3.0-or-later)**, with an **additional attribution term** under GPLv3
 **section 7(b)**. The full licence text is in [`LICENSE`](LICENSE); the
 attribution requirement and the bundled third-party licences are in
 [`NOTICE`](NOTICE).
 
 **Commercial use is allowed.** You may build a commercial product with
-laser-scan. The condition is the one the GPL already imposes: if you distribute
-a product that contains or is derived from laser-scan, you must release that
+laser-line-scan. The condition is the one the GPL already imposes: if you distribute
+a product that contains or is derived from laser-line-scan, you must release that
 product's **complete corresponding source** under **GPL-3.0-or-later** and keep
 the attribution visible in its UI, documentation and sources. You cannot ship
-laser-scan inside a product that keeps its source private.
+laser-line-scan inside a product that keeps its source private.
 
 Any distribution must preserve this notice in the user interface, the
 documentation and the source headers:
 
-> **Laser Scan, Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>**
+> **Laser Line Scan, Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>**
 
 See [`docs/COMMERCIAL-USE.md`](docs/COMMERCIAL-USE.md) for the plain-language
 explanation and contact
