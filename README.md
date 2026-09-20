@@ -202,7 +202,7 @@ documentation and the source headers:
 
 See [`docs/COMMERCIAL-USE.md`](docs/COMMERCIAL-USE.md) for the plain-language
 explanation and contact
-[ping.zhao@nidvue.com](mailto:ping.zhao@nidvue.com) with licensing questions.
+[contact@nidvue.com](mailto:contact@nidvue.com) with licensing questions.
 
 ## Contributing
 

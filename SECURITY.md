@@ -7,7 +7,7 @@
 ## Reporting a vulnerability
 
 Please report security issues **privately** to
-[ping.zhao@nidvue.com](mailto:ping.zhao@nidvue.com). Do not open a public issue
+[contact@nidvue.com](mailto:contact@nidvue.com). Do not open a public issue
 for a suspected vulnerability.
 
 Please include, where you can:
