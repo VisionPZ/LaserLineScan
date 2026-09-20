@@ -44,6 +44,23 @@ Then walk the wizard:
 5. **04 Dense 3D result** — select **“View 3D →”**, orbit the point cloud and
    export it as PLY.
 
+## Development environment (Nix)
+
+The toolchain is pinned by a Nix flake against **nixpkgs 25.11** — node 22, python
+with playwright, a Chromium for the probe and git-lfs — so nothing depends on what
+happens to be installed.
+
+```sh
+nix develop                  # the environment; it exports NIDVUE_CHROMIUM
+npm test                     # unit and integration tests
+node serve.mjs               # then open http://localhost:8080
+python3 tests/smoke.py       # the browser walkthrough (calibration + scan)
+nix build                    # the publishable site as a store path
+nix run .#serve              # serve that build
+```
+
+`direnv allow` picks the shell up automatically through the committed `.envrc`.
+
 ## Features
 
 - **00 Optics** — model the laser wavelength and width, the lens band-pass
