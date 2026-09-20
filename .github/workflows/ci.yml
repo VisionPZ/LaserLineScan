@@ -21,27 +21,24 @@ jobs:
         with:
           lfs: true
 
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v4
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31.11.1
         with:
-          node-version: '20'
+          extra_nix_config: |
+            experimental-features = nix-command flakes
 
       # No dependencies, so there is nothing to install. Run the project's test
       # script when package.json defines one, otherwise fall back to node --test.
       - name: Test
         shell: bash
         run: |
-          # Early revisions have no tests yet; the job is honest about that
-          # instead of failing on a directory that does not exist.
+          # The flake pins the toolchain (nixpkgs 25.11): the dev shell has
+          # node 22, so the suites run the same way here as on a workstation.
           if [ ! -d tests ]; then
             echo "no tests in this revision yet - nothing to run"
             exit 0
           fi
-          if node -e "const s = require('./package.json').scripts || {}; process.exit(s.test ? 0 : 1)"; then
-            npm test
-          else
-            node --test tests/
-          fi
+          nix develop --command npm test
 
       # Every SPDX-License-Identifier in the project must be GPL-3.0-or-later.
       # The licence/attribution files are exempt because they carry the full
@@ -88,17 +85,11 @@ jobs:
         with:
           lfs: true
 
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31.11.1
         with:
-          python-version: '3.12'
-
-      - name: Install Playwright and Chromium
-        shell: bash
-        run: |
-          python -m pip install --upgrade pip
-          pip install playwright
-          playwright install --with-deps chromium
+          extra_nix_config: |
+            experimental-features = nix-command flakes
 
       - name: Run the browser probe
         shell: bash
