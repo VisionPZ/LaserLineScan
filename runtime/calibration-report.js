@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 
 /* Both human-readable exports consume this same completed calibration snapshot.
  * The browser export uses native editable PowerPoint text, shapes and tables. */

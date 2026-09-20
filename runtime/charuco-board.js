@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 
 // Generated from the ChArUco board texture the offline renderer uses.
 // bits: row-major, 1 = dark cell, 4 cells per hex digit (MSB first).

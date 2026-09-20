@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 
 /** Estimate an encoder-to-normal map from recovered calibration planes.
  * Encoder readings are acquisition metadata; no rendered plane coefficients

@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * The open WebAssembly laser kernel (runtime/core.wasm): reference / plane
  * fitting, the stripe-extraction estimators and sub-pixel accuracy.

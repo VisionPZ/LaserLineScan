@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 
 /** Laser stripe extraction and parallel-plane calibration. All coordinates use
  * pixel centers (u + 0.5, v + 0.5). No validation geometry enters this kernel. */

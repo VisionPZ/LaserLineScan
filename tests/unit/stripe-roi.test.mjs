@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * The automatic stripe search-ROI derived from the laser-to-camera
  * calibration: depth prior, per-column band, uncertainty and clipping.

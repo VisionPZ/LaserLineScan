@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * build-index.mjs — produce the prebuilt, self-contained English index.html
  * for the standalone laser-line-scan package.
@@ -130,7 +129,6 @@ h1,h2,h3{margin:0;font-weight:600}
 
 const html = `<!--
   SPDX-License-Identifier: GPL-3.0-or-later
-  Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 -->
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">

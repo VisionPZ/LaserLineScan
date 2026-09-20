@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 
 import {CHARUCO_BOARD} from './charuco-board.js';
 /** Procedural laser-camera rig for the step-0 viewer. Geometry is driven by the
