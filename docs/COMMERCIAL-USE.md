@@ -67,7 +67,7 @@ GPL-3.0-or-later, with the attribution kept.
 If that does not fit your product, laser-line-scan is not the right component. The
 project does not offer a dual licence that removes the source-sharing
 obligation. If you have questions about what the licence requires, contact
-[ping.zhao@nidvue.com](mailto:ping.zhao@nidvue.com).
+[contact@nidvue.com](mailto:contact@nidvue.com).
 
 ## Worked examples
 
@@ -116,7 +116,7 @@ modified version) into a shipping application. It accepts the copyleft.
 
 ## Questions
 
-Licensing questions: [ping.zhao@nidvue.com](mailto:ping.zhao@nidvue.com).
+Licensing questions: [contact@nidvue.com](mailto:contact@nidvue.com).
 Security reports: see
 [`SECURITY.md`](../SECURITY.md). Contributions: see
 [`CONTRIBUTING.md`](../CONTRIBUTING.md).

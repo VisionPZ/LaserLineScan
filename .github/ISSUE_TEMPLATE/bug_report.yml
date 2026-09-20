@@ -12,7 +12,7 @@ body:
 
         **Do not report security vulnerabilities here.** See
         [SECURITY.md](../blob/main/SECURITY.md) and email
-        ping.zhao@nidvue.com privately instead.
+        contact@nidvue.com privately instead.
   - type: dropdown
     id: step
     attributes:

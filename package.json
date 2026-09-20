@@ -6,8 +6,8 @@
   "description": "An open laser-perception kit: a browser-only structured-light laser scanner built from ES modules, Web Workers and a WebAssembly kernel compiled from AssemblyScript.",
   "license": "GPL-3.0-or-later",
   "author": {
-    "name": "Ping Zhao",
-    "email": "ping.zhao@nidvue.com",
+    "name": "Nidvue",
+    "email": "contact@nidvue.com",
     "url": "https://nidvue.com"
   },
   "repository": {
