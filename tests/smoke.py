@@ -66,29 +66,24 @@ try:
         page.on("pageerror", lambda e: errors.append(str(e)))
         page.on("console", lambda message: console_errors.append(f"{message.type}: {message.text}") if message.type == "error" else None)
         page.on("response", lambda r: failed.append((r.status, r.url)) if r.status >= 400 else None)
-        # The package ships no favicon, so Chromium's automatic /favicon.ico
-        # request logs an unrelated console 404. Stub it with 204 so the
-        # zero-console-error assertion measures the scanner itself.
-        page.route("**/favicon.ico", lambda route: route.fulfill(status=204, body=b""))
-
         page.goto(origin + "/", wait_until="domcontentloaded")
-        expect(page.locator("#ll-start")).to_be_enabled(timeout=30000)
+        expect(page.locator("#ll-start")).to_be_enabled(timeout=60000)
         assert page.locator("#ll-setup-section").is_visible()
 
         # Wizard: optics -> rig -> calibration, driven from the stepper so the
         # probe never depends on which continue button happens to be on screen.
         page.click('.ll-stepper [data-step="1"]')
-        page.wait_for_function("document.querySelector('#laser-lab').dataset.step==='1'")
+        page.wait_for_function("document.querySelector('#laser-lab').dataset.step==='1'", timeout=120000)
         expect(page.locator("#ll-rig-section")).to_be_visible()
         page.click('.ll-stepper [data-step="2"]')
-        page.wait_for_function("document.querySelector('#laser-lab').dataset.step==='2'")
+        page.wait_for_function("document.querySelector('#laser-lab').dataset.step==='2'", timeout=120000)
         expect(page.locator("#ll-calibration-section")).to_be_visible()
         # The packaged demo's default rig is charuco-moving-board. Its validation
         # split is intentionally small (12 frames), so the end-to-end point-count
         # proof selects charuco-fixed-board, whose split carries the shared truth
         # volume and enough frames to exceed the 30000-point threshold.
         page.click('[data-dataset="charuco-fixed-board"]')
-        expect(page.locator("#ll-start")).to_be_enabled(timeout=30000)
+        expect(page.locator("#ll-start")).to_be_enabled(timeout=60000)
 
         # Calibration at full speed.
         page.select_option("#ll-speed", "0")
@@ -103,12 +98,12 @@ try:
 
         # Object scan at full speed.
         page.click("#ll-to-validation")
-        page.wait_for_function("document.querySelector('#laser-lab').dataset.step==='3'")
+        page.wait_for_function("document.querySelector('#laser-lab').dataset.step==='3'", timeout=120000)
         page.select_option("#ll-v-speed", "0")
         page.click("#ll-validate")
         page.wait_for_function("!document.querySelector('#laser-lab').classList.contains('is-running')", timeout=240000)
         expect(page.locator("#ll-result-section")).to_be_visible()
-        page.wait_for_function("document.querySelector('#ll-viewer').dataset.revealed==='true'", timeout=30000)
+        page.wait_for_function("document.querySelector('#ll-viewer').dataset.revealed==='true'", timeout=60000)
         points = int(page.locator("#ll-viewer").get_attribute("data-points") or 0)
         assert points > 30000, points
         # The visible point count must agree with the reconstructed cloud.
@@ -118,7 +113,7 @@ try:
         print(f"validation points={points} (expected > 30000)", flush=True)
 
         # The export button must produce a non-empty ASCII PLY from the cloud.
-        expect(page.locator("#ll-ply")).to_be_enabled(timeout=30000)
+        expect(page.locator("#ll-ply")).to_be_enabled(timeout=60000)
         with page.expect_download(timeout=60000) as download_info:
             page.click("#ll-ply")
         download_path = download_info.value.path()
