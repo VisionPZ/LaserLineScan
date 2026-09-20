@@ -39,7 +39,6 @@ Closes #
       `SPDX-License-Identifier: GPL-3.0-or-later` header, and new source files
       have one.
 - [ ] **Attribution preserved**: the notice
-      `Laser Line Scan, Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>` remains
       in the UI, documentation and sources as required by the project licence.
 - [ ] No secrets, credentials or private capture data are included.
 - [ ] Documentation affected by this change has been updated.

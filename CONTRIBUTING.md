@@ -132,7 +132,6 @@ approach, and link the issue it addresses. Before opening one, confirm:
 - [ ] **Licence headers kept** on every file I touched, and a new SPDX header on
       every new file.
 - [ ] **Attribution preserved**: the notice
-      `Laser Line Scan, Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>` remains
       in the UI, documentation and sources as the project licence requires.
 - [ ] No secrets, credentials or private capture data are included.
 - [ ] Documentation affected by the change has been updated.
@@ -148,8 +147,6 @@ licence: **GPL-3.0-or-later** plus the additional attribution term under GPLv3
 section 7(b) described in [`NOTICE`](NOTICE). In short, anyone distributing a
 product built from laser-line-scan must open source that product under the same
 licence and preserve the attribution:
-
-> **Laser Line Scan, Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>**
 
 Do not add a different licence header to a file you did not write, and do not
 relicense third-party code. The authoritative licence text is in

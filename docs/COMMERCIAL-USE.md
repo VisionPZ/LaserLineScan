@@ -51,8 +51,6 @@ GPL-3.0-or-later, so your recipients can rebuild and modify the product.
 Every distribution must preserve this notice in the product's user interface,
 its documentation and its sources:
 
-> **Laser Line Scan, Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>**
-
 It is not enough to mention it in a legal file nobody reads: the additional term
 requires it to be visible in the UI and the docs. A reasonable interpretation is
 an "About", credits or licence screen that a user can reach.
