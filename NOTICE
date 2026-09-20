@@ -1,4 +1,4 @@
-Laser Scan - an open laser-perception kit
+Laser Line Scan - an open laser-perception kit
 Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 
 This product includes software developed at Nidvue (https://nidvue.com).
@@ -29,7 +29,7 @@ reconstruction.
   core.wasm / oss.ts    kernel: Steger/Hessian extraction, plane fits
 
 Additional term under GPL-3.0 section 7(b): any product that uses, modifies or
-distributes this software must preserve the attribution "Laser Scan, Copyright
+distributes this software must preserve the attribution "Laser Line Scan, Copyright
 (C) 2026 Ping Zhao <ping.zhao@nidvue.com>" in its user interface (for example an
 about screen, credits or footer), in its documentation and in its source
 headers. Commercial use is permitted under GPL-3.0-or-later; distributing a

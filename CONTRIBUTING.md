@@ -3,9 +3,9 @@
   Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 -->
 
-# Contributing to laser-scan
+# Contributing to laser-line-scan
 
-Thanks for helping improve laser-scan. The project is small, dependency-free and
+Thanks for helping improve laser-line-scan. The project is small, dependency-free and
 browser-first, and the contribution process is meant to stay that way.
 
 ## Developer setup
@@ -14,7 +14,7 @@ You need **Node.js 20 or newer**. There is nothing to install:
 
 ```sh
 git clone https://github.com/VisionPZ/LaserLineScan.git
-cd laser-scan
+cd laser-line-scan
 node serve.mjs        # http://localhost:8080
 npm test              # the Node test suite
 ```
@@ -134,7 +134,7 @@ approach, and link the issue it addresses. Before opening one, confirm:
 - [ ] **Licence headers kept** on every file I touched, and a new SPDX header on
       every new file.
 - [ ] **Attribution preserved**: the notice
-      `Laser Scan, Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>` remains
+      `Laser Line Scan, Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>` remains
       in the UI, documentation and sources as the project licence requires.
 - [ ] No secrets, credentials or private capture data are included.
 - [ ] Documentation affected by the change has been updated.
@@ -148,10 +148,10 @@ The pull-request template repeats this checklist.
 By contributing you agree that your contribution is licensed under the project
 licence: **GPL-3.0-or-later** plus the additional attribution term under GPLv3
 section 7(b) described in [`NOTICE`](NOTICE). In short, anyone distributing a
-product built from laser-scan must open source that product under the same
+product built from laser-line-scan must open source that product under the same
 licence and preserve the attribution:
 
-> **Laser Scan, Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>**
+> **Laser Line Scan, Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>**
 
 Do not add a different licence header to a file you did not write, and do not
 relicense third-party code. The authoritative licence text is in

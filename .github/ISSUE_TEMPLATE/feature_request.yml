@@ -1,14 +1,14 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 name: Feature request
-description: Suggest an idea or improvement for laser-scan.
+description: Suggest an idea or improvement for laser-line-scan.
 title: "[Feature]: "
 labels: ["enhancement", "triage"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping shape laser-scan. Please describe the problem rather
+        Thanks for helping shape laser-line-scan. Please describe the problem rather
         than only a solution — it helps us find the right fix.
   - type: dropdown
     id: area

@@ -1,9 +1,9 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <!-- Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com> -->
 
-# laser-scan design documentation
+# laser-line-scan design documentation
 
-This directory documents the design of **laser-scan**, the browser-only
+This directory documents the design of **laser-line-scan**, the browser-only
 structured-light laser scanner. Every page here is derived from the shipped
 runtime modules (`../runtime/*.js`), the compiled AssemblyScript kernel
 (`../runtime/core.wasm`) and the upstream reference documents

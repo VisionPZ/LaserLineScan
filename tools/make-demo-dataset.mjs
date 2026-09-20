@@ -3,7 +3,7 @@
 // Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * make-demo-dataset.mjs — build the small, self-contained demo dataset shipped
- * with laser-scan.
+ * with laser-line-scan.
  *
  * The upstream site keeps its capture sequences under public/laser/hd/ (about
  * 2.6 GB). The standalone package must not ship that, so this script copies a

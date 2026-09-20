@@ -3,7 +3,7 @@
 
 # Architecture
 
-**laser-scan** is a browser-only structured-light laser scanner: five wizard
+**laser-line-scan** is a browser-only structured-light laser scanner: five wizard
 steps, plain ES modules, Web Workers and one WebAssembly kernel. Nothing is
 uploaded and no server-side computation exists — the frames, the calibration
 and the point cloud stay in the page. The package root
