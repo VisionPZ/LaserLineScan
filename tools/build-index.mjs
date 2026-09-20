@@ -135,6 +135,7 @@ const html = `<!--
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="runtime/mascots/nidvue-84-scan.svg">
 <title>laser-line-scan · ${escape(strings.title)}</title>
 <meta name="description" content="${escape(strings.lead)}">
 <style>${tokens}</style>
