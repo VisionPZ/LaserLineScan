@@ -156,3 +156,10 @@ relicense third-party code. The authoritative licence text is in
 [`LICENSE`](LICENSE).
 
 By participating you agree to the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Environment
+
+Use the committed flake: `nix develop` gives node 22, python with playwright, a
+pinned Chromium (exported as `NIDVUE_CHROMIUM`) and git-lfs. The suites are then
+`npm test` (offline) and `python3 tests/smoke.py` (the browser walkthrough).
+CI runs exactly these commands, so a local run and a green check mean the same.
