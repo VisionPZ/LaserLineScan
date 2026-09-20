@@ -200,8 +200,6 @@ laser-line-scan inside a product that keeps its source private.
 Any distribution must preserve this notice in the user interface, the
 documentation and the source headers:
 
-> **Laser Line Scan, Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>**
-
 See [`docs/COMMERCIAL-USE.md`](docs/COMMERCIAL-USE.md) for the plain-language
 explanation and contact
 [ping.zhao@nidvue.com](mailto:ping.zhao@nidvue.com) with licensing questions.
