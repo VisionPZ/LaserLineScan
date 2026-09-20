@@ -85,11 +85,18 @@ jobs:
         with:
           lfs: true
 
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31.11.1
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
         with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
+          python-version: '3.12'
+
+      - name: Install Playwright and Chromium
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+          echo "NIDVUE_CHROMIUM=$(python -c 'from playwright.sync_api import sync_playwright; pw=sync_playwright().start(); print(pw.chromium.executable_path)')" >> "$GITHUB_ENV"
 
       - name: Run the browser probe
         shell: bash
