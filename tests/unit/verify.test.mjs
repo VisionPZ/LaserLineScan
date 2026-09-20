@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * The E1 out-of-band verification certificate of the laser kernel: per-column
  * exclusion detection, flagged rows and band expansion.

@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 
 /* Calibration is a two-pass job: detect the ChArUco corners on every frame
  * (which are shown live), calibrate the camera intrinsics and lens distortion

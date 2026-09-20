@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * The spectral design model (spectral.js): preset tables, filter/ambient/sensor
  * maths, the capture transform and the step-0 UI wiring the browser ships.

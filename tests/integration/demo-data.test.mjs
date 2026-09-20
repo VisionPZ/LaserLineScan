@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * Deep integrity tests for the demo dataset shipped inside the package:
  * every manifest must account for every frame on disk (and vice versa), truth

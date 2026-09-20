@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 
 import {calibrationMarkdown,calibrationPowerpoint} from './calibration-report.js';
 import {searchBand,bandCoverage} from './stripe-roi.js';

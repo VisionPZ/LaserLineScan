@@ -1,6 +1,5 @@
 <!--
   SPDX-License-Identifier: GPL-3.0-or-later
-  Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 -->
 
 # Contributing to laser-line-scan
@@ -60,7 +59,6 @@ Every new source file must start with the SPDX header, including `.mjs`, `.js`,
 
 ```text
 SPDX-License-Identifier: GPL-3.0-or-later
-Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 ```
 
 Keep the header on files you edit. CI enforces that every

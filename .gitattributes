@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 
 # Git LFS keeps the capture set, the truth volumes and the compiled kernel out
 # of the normal object store: they are megabytes of pixels and floats that no
