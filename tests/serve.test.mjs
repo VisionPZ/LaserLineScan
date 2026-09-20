@@ -17,7 +17,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const READY_MARKER = 'laser-scan serving';
+const READY_MARKER = 'laser-line-scan serving';
 const STARTUP_TIMEOUT_MS = 15000;
 const REQUEST_TIMEOUT_MS = 15000;
 const SUITE_TIMEOUT_MS = 60000;

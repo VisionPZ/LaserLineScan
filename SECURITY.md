@@ -25,7 +25,7 @@ reasonable time to update.
 
 ## Scope
 
-laser-scan runs entirely client-side. The security surface is therefore small:
+laser-line-scan runs entirely client-side. The security surface is therefore small:
 
 - **Browser memory safety of the WebAssembly kernel.** The kernel reads image
   bytes and writes stripe positions and point clouds through linear memory.
@@ -35,7 +35,7 @@ laser-scan runs entirely client-side. The security surface is therefore small:
   structured messages (typed arrays, config objects, dataset manifests).
   Messages that are malformed, oversized or crafted to confuse the protocol are
   in scope.
-- **No data leaves the machine.** laser-scan performs no upload and no
+- **No data leaves the machine.** laser-line-scan performs no upload and no
   telemetry. Any code path that transmits capture data, calibration data or
   point clouds off the device is a security bug — report it.
 
@@ -43,7 +43,7 @@ Out of scope unless they demonstrate one of the above:
 
 - vulnerabilities in third-party browsers;
 - issues that require an already-compromised browser or operating system;
-- vulnerabilities in any Nidvue software other than laser-scan.
+- vulnerabilities in any Nidvue software other than laser-line-scan.
 
 ## Supported versions
 

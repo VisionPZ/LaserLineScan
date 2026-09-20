@@ -3,7 +3,7 @@
 // Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * build-index.mjs — produce the prebuilt, self-contained English index.html
- * for the standalone laser-scan package.
+ * for the standalone laser-line-scan package.
  *
  * The website renders its laser page from content/laser-copy.json plus
  * tools/laser/page.html. This script reproduces that fill-in for English only,
@@ -137,7 +137,7 @@ const html = `<!--
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>laser-scan · ${escape(strings.title)}</title>
+<title>laser-line-scan · ${escape(strings.title)}</title>
 <meta name="description" content="${escape(strings.lead)}">
 <style>${tokens}</style>
 <link rel="stylesheet" href="runtime/lab.css">
