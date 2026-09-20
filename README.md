@@ -2,13 +2,13 @@
   SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# laser-line-scan
+# Laser Line Scan
 
 [![Licence: GPL-3.0-or-later](https://img.shields.io/badge/licence-GPL--3.0--or--later-blue.svg)](LICENSE)
 [![CI](https://github.com/VisionPZ/LaserLineScan/actions/workflows/ci.yml/badge.svg)](https://github.com/VisionPZ/LaserLineScan/actions/workflows/ci.yml)
 [![Browser-only: no server, nothing uploaded](https://img.shields.io/badge/browser--only-no_server%2C_nothing_uploaded-success.svg)](#quick-start)
 
-**laser-line-scan** is a browser-only structured-light laser scanner. It walks a full
+**Laser Line Scan** is a browser-only structured-light laser scanner. It walks a full
 laser-perception pipeline — 00 optics, 01 rig, 02 calibration, 03 object scan,
 04 dense 3D result — in ES modules, Web Workers and a WebAssembly kernel
 compiled from AssemblyScript. Everything runs **on your machine**: no server, no
