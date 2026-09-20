@@ -55,7 +55,13 @@ try:
     print(f"server {origin} pid={server.pid}", flush=True)
 
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=True, args=["--no-sandbox"], executable_path=CHROMIUM)
+        browser = pw.chromium.launch(
+            headless=True,
+            # A CI runner has no GPU: SwiftShader gives the page a WebGL context,
+            # without which the lab reports itself not ready and disables Start.
+            args=["--no-sandbox", "--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"],
+            executable_path=CHROMIUM,
+        )
         page = browser.new_page(viewport={"width": 1440, "height": 1100})
         page.on("pageerror", lambda e: errors.append(str(e)))
         page.on("console", lambda message: console_errors.append(f"{message.type}: {message.text}") if message.type == "error" else None)
