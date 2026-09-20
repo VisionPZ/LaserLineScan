@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * Step-0 rig scene geometry: the laser sheet plane, the camera field-of-view
  * frustum and the baseline / standoff rulers (rig-scene.js).

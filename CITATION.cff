@@ -1,5 +1,4 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 cff-version: 1.2.0
 message: "If you use laser-line-scan in academic work, please cite it as below."
 title: "laser-line-scan: a browser-only structured-light laser scanner"

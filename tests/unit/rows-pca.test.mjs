@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * The trained row-subspace laser gate: loading the shipped rows-pca model,
  * row residuals and the contiguous gate span.

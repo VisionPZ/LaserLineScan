@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 // Zero-dependency static server for the standalone laser-line-scan package.
 // `node serve.mjs` -> http://localhost:8080 (override with PORT / --port).
 import { createReadStream, existsSync, statSync } from 'node:fs';

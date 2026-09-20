@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * Integration test for the packaged static server (`serve.mjs`). Boots the
  * real server as a child process on a free port and asserts, over raw HTTP:

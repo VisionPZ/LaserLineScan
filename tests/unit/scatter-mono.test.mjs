@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * Mono stride-1 column recovery must be numerically identical to the colour
  * blue-excess path (scatter.js).

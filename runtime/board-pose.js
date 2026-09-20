@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 
 /* ChArUco detection, optional marker-corner refinement, camera calibration
  * (intrinsics + lens distortion) and per-view solvePnP run in the browser

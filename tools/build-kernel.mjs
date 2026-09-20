@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /**
  * Rebuild the WebAssembly kernel from `kernel/oss.ts`.
  *

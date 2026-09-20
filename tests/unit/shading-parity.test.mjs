@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * The browser applySpectral() capture transform must match the kernel shade()
  * byte for byte across the shipped designs.

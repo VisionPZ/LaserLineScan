@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 """End-to-end browser proof for the packaged laser-line-scan project.
 
 Starts `serve.mjs`, drives the wizard (optics -> rig -> calibration), runs the

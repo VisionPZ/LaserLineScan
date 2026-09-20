@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2026 Ping Zhao <ping.zhao@nidvue.com>
 /*
  * Lens-distortion coefficient handling in board-pose.js, including the
  * OpenCV (k1,k2,p1,p2,k3[,k4,k5,k6]) rational-model ordering regression.
