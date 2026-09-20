@@ -9,7 +9,12 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(fileURLToPath(new URL('.', import.meta.url)));
 const argPort = process.argv.indexOf('--port');
-const port = Number(argPort >= 0 ? process.argv[argPort + 1] : process.env.PORT || 8080);
+const requested = argPort >= 0 ? process.argv[argPort + 1] : process.env.PORT || 8080;
+const port = Number(requested);
+if (!Number.isInteger(port) || port < 0 || port > 65535) {
+  console.error(`Not a port number: ${requested}`);
+  process.exit(1);
+}
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.wasm': 'application/wasm', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gz': 'application/gzip' };
 
 const server = createServer((req, res) => {
@@ -21,4 +26,8 @@ const server = createServer((req, res) => {
   res.writeHead(200, { 'content-type': types[extname(file).toLowerCase()] || 'application/octet-stream', 'cache-control': 'no-cache' });
   createReadStream(file).pipe(res);
 });
-server.listen(port, () => console.log(`laser-line-scan serving ${root}\n  http://localhost:${port}`));
+server.listen(port, () => {
+  // `--port 0` lets the OS choose; report the port that was actually bound.
+  const bound = server.address().port;
+  console.log(`laser-line-scan serving ${root}\n  http://localhost:${bound}`);
+});
