@@ -32,17 +32,69 @@ node serve.mjs
 (`.wasm` in particular). Any static file server works; set `PORT` or pass
 `--port` to change the port.
 
-Then walk the wizard:
+Then walk the five steps below.
 
-1. **00 Optics** — optionally shape the laser/lens/ambient light, then select
-   **“Set up the rig →”**.
-2. **01 Rig** — inspect the camera/laser geometry, then select **“Set up
-   calibration →”**.
-3. **02 Calibration** — pick a board image set (the prebuilt demo ships two),
-   then select **“▶ Start calibration”**.
-4. **03 Object scan** — select **“Continue to Scan →”**, then **“◇ Scan”**.
-5. **04 Dense 3D result** — select **“View 3D →”**, orbit the point cloud and
-   export it as PLY.
+## The five steps
+
+Each step is one stage of the pipeline, and each can be changed and re-measured on its own. The
+screenshots follow the theme of the page you are reading.
+
+### 00 Optics
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/step-00-optics.webp">
+  <img alt="Step 00: laser spectrum, lens filter and ambient light controls" src="docs/screenshots/step-00-optics-light.webp">
+</picture>
+
+The optical design fixes the laser's spectral line, the filter's transmission and the ambient
+spectrum. The same design determines the direction along which the stripe is scored, so a
+change of wavelength changes the detector as well as the image. Select **“Set up the rig →”**.
+
+### 01 Rig
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/step-01-rig.webp">
+  <img alt="Step 01: the camera and laser sheet meeting at the calibration board, with baseline and working-distance controls" src="docs/screenshots/step-01-rig-light.webp">
+</picture>
+
+The rig view exposes the baseline and the working distance. Both govern how a displacement of
+the stripe in the image translates into a change in reconstructed depth. Select **“Set up
+calibration →”**.
+
+### 02 Calibration
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/step-02-calibration.webp">
+  <img alt="Step 02: the ChArUco board, its detected corners and the fitted calibration report" src="docs/screenshots/step-02-calibration-light.webp">
+</picture>
+
+Calibration solves the camera and the laser plane against a board of known geometry, and
+reports the residual, the board span and the fitted distortion. The two board sets correspond to
+the two motion models: a fixed board with a moving laser, or a moving board with a fixed laser.
+Select a set, then **“▶ Start calibration”**.
+
+### 03 Object scan
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/step-03-scan.webp">
+  <img alt="Step 03: an object frame with the detected stripe, the scan controls and the viewer" src="docs/screenshots/step-03-scan-light.webp">
+</picture>
+
+Each object frame is decoded, the stripe is extracted inside its geometric band, the rows the
+search excluded are verified and missing columns are recovered. The reconstruction accumulates
+in the viewer as the frames are measured. Select **“◇ Scan”**.
+
+### 04 Dense 3D result
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/step-04-result.webp">
+  <img alt="Step 04: the reconstructed point cloud, colored by distance, with the reported error and coverage" src="docs/screenshots/step-04-result-light.webp">
+</picture>
+
+The completed scan: the cloud is colored by distance, alongside the reconstruction error, the
+scan coverage and the search-verification status the run reports. The view can be orbited and the
+cloud exported as PLY.
+
 
 ## Development environment (Nix)
 
@@ -101,10 +153,14 @@ nix run .#serve              # serve that build
 └── serve.mjs          zero-dependency static server
 ```
 
-The `demo/` tree holds 12 calibration frames per rig; validation ships the
-`bin` scene with 12 frames for the moving rig (each with its own truth volume)
-and 40 frames for the fixed rig (one shared truth volume). The multi-gigabyte HD
-capture sequences are **not** shipped — see
+The `demo/` tree holds 12 calibration frames per rig. Validation ships all five
+scenes the page offers — `bin`, `bottles`, `bridge`, `rail` and `plush` — for
+both rigs, so no card is ever selectable without data behind it. `bin` carries
+the largest set (12 lines for the moving rig, each with its own truth volume,
+and 40 for the fixed rig, which shares one truth volume); the other scenes carry
+6 moving lines (one truth volume each, ~0.35 MiB quantised, because a volume describes a
+single camera pose and cannot be shared) and 24 fixed lines. The multi-gigabyte
+HD capture sequences are **not** shipped — see
 [Regenerating things](#regenerating-things).
 
 ## Documentation
