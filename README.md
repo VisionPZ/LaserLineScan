@@ -50,6 +50,9 @@ The optical design fixes the laser's spectral line, the filter's transmission an
 spectrum. The same design determines the direction along which the stripe is scored, so a
 change of wavelength changes the detector as well as the image. Select **“Set up the rig →”**.
 
+
+**Algorithm.** The sensor-weighted laser and ambient yields are integrated over 1 nm samples from 380 to 1000 nm, $L=\sum_\lambda \mathrm{laser}\,\mathrm{filter}\,\mathrm{sensor}$ and $A_{\mathrm{amb}}=\sum_\lambda \mathrm{ambient}\,\mathrm{filter}\,\mathrm{sensor}$, and the same design fixes the direction $\mathbf{w}=\mathbf{c}/\lVert\mathbf{c}\rVert_2$ along which the stripe is later scored. The model, including the incidence-angle filter shift, is in [docs/OPTICS-MODEL.md](docs/OPTICS-MODEL.md).
+
 ### 01 Rig
 
 <picture>
@@ -60,6 +63,9 @@ change of wavelength changes the detector as well as the image. Select **“Set 
 The rig view exposes the baseline and the working distance. Both govern how a displacement of
 the stripe in the image translates into a change in reconstructed depth. Select **“Set up
 calibration →”**.
+
+
+**Algorithm.** The laser sheet is $AX+Y+BZ=C$. A camera ray $\mathbf{r}=[x_u,y_u,1]^{\mathsf T}$ meets it at $Z=C/D$ with $D=Ax_u+y_u+B$, and the local sensitivity $\partial Z/\partial y_u=-C/D^2$ shows why rays nearly parallel to the sheet are the error-prone ones. The geometry is derived in [docs/CALIBRATION.md](docs/CALIBRATION.md).
 
 ### 02 Calibration
 
@@ -73,6 +79,9 @@ reports the residual, the board span and the fitted distortion. The two board se
 the two motion models: a fixed board with a moving laser, or a moving board with a fixed laser.
 Select a set, then **“▶ Start calibration”**.
 
+
+**Algorithm.** Board poses yield stripe intersections in 3D, and the plane is fitted by iteratively reweighted least squares on the algebraic residual $r_i=Y_i+AX_i+BZ_i-C$. The fixed-board model constrains every plane through the emitter, $C=E_y+AE_x+BE_z$. Details in [docs/CALIBRATION.md](docs/CALIBRATION.md).
+
 ### 03 Object scan
 
 <picture>
@@ -83,6 +92,9 @@ Select a set, then **“▶ Start calibration”**.
 Each object frame is decoded, the stripe is extracted inside its geometric band, the rows the
 search excluded are verified and missing columns are recovered. The reconstruction accumulates
 in the viewer as the frames are measured. Select **“◇ Scan”**.
+
+
+**Algorithm.** The score projects each pixel onto the designed color, $S=\max(0,\mathbf{w}^{\mathsf T}\mathbf{I}-\ell)$, where $\ell$ is the per-frame median background; geometry restricts the search to a row band $v(z,u)=c_y+f_y(C/z-B-Ax_u)$; rows the band excluded are verified against the threshold, and columns without a detection are recovered by a mixture fit. See [docs/SCAN-PIPELINE.md](docs/SCAN-PIPELINE.md).
 
 ### 04 Dense 3D result
 
@@ -95,6 +107,9 @@ The completed scan: the cloud is colored by distance, alongside the reconstructi
 scan coverage and the search-verification status the run reports. The view can be orbited and the
 cloud exported as PLY.
 
+
+
+**Algorithm.** Each frame is scored against the depth rendered at its own pose, $e_f=s_{\mathrm{mm}}\lVert(\hat Z_f-Z_f^{\mathrm{ref}})\mathbf{r}\rVert_2$, and coverage is $\min(1,N_{\mathrm{scored}}/N_{\mathrm{expected}})$. The evaluation model is described in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/TESTING.md](docs/TESTING.md).
 
 ## Development environment (Nix)
 
