@@ -39,6 +39,10 @@ Then walk the five steps below.
 Each step is one stage of the pipeline, and each can be changed and re-measured on its own. The
 screenshots follow the theme of the page you are reading.
 
+These five steps are the shape of the pipeline. The detailed technical explanation, every stage's
+algorithm together with its formulas, is published as an article:
+[Laser Line Scanning: From Calibration to Sub-mm Geometry](https://www.nidvue.com/articles/laser-line-scan-defect-inspection/).
+
 ### 00 Optics
 
 <picture>
@@ -180,7 +184,9 @@ HD capture sequences are **not** shipped - see
 
 ## Documentation
 
-The design notes live under [`docs/`](docs/README.md):
+The design notes live under [`docs/`](docs/README.md). The end-to-end technical explanation,
+with the pipeline's formulas, is published on the website:
+[Laser Line Scanning: From Calibration to Sub-mm Geometry](https://www.nidvue.com/articles/laser-line-scan-defect-inspection/).
 
 | Document | Contents |
 | --- | --- |
