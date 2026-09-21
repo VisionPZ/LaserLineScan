@@ -18,8 +18,9 @@ modified and used without a proprietary component hidden behind an API.
 
 ## Quick start
 
-No build step and no npm dependencies. You need **Node.js 20 or newer** and a
-modern browser.
+**Hosted demo, no install:** [English](https://www.nidvue.com/laser-line-scan/) · [中文](https://www.nidvue.com/zh/laser-line-scan/) — this same code, running in the browser. It is the companion to the technical article [Laser Line Scanning: From Calibration to Sub-mm Geometry](https://www.nidvue.com/articles/laser-line-scan-defect-inspection/).
+
+To run it yourself, no build step and no npm dependencies are needed. You need **Node.js 20 or newer** and a modern browser.
 
 ```sh
 git clone https://github.com/VisionPZ/LaserLineScan.git

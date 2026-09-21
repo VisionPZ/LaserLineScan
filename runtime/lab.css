@@ -145,3 +145,10 @@ html[data-theme=light] .laser-lab{--ll-plot-bg:#FFFFFF;--ll-plot-grid:rgba(14,19
 .ll-metrics>div strong.is-ok,.ll-calibration-metrics strong.is-ok{color:var(--ll-ok)}
 .ll-metrics>div strong.is-warn,.ll-calibration-metrics strong.is-warn{color:var(--ll-warn)}
 .ll-metrics>div strong.is-crit,.ll-calibration-metrics strong.is-crit{color:var(--ll-crit)}
+
+/* The lab's own links out: the technical article and the source repository.
+   Kept in the hero so the connection is visible before the wizard is run. */
+.ll-hero-links{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:4px 0 0;font-size:13px}
+.ll-hero-links a{display:inline-flex;align-items:center;min-height:36px;color:var(--accent);text-decoration:none}
+.ll-hero-links a:hover,.ll-hero-links a:focus-visible{text-decoration:underline}
+.ll-hero-links span{color:var(--muted)}
