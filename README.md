@@ -9,8 +9,8 @@
 [![Browser-only: no server, nothing uploaded](https://img.shields.io/badge/browser--only-no_server%2C_nothing_uploaded-success.svg)](#quick-start)
 
 **Laser Line Scan** is a browser-only structured-light laser scanner. It walks a full
-laser-perception pipeline — 00 optics, 01 rig, 02 calibration, 03 object scan,
-04 dense 3D result — in ES modules, Web Workers and a WebAssembly kernel
+laser-perception pipeline - 00 optics, 01 rig, 02 calibration, 03 object scan,
+04 dense 3D result - in ES modules, Web Workers and a WebAssembly kernel
 compiled from AssemblyScript. Everything runs **on your machine**: no server, no
 upload, no telemetry. The frames, the calibration and the point cloud never leave
 the browser. The project exists so that the whole pipeline can be studied,
@@ -113,8 +113,8 @@ cloud exported as PLY.
 
 ## Development environment (Nix)
 
-The toolchain is pinned by a Nix flake against **nixpkgs 25.11** — node 22, python
-with playwright, a Chromium for the probe and git-lfs — so nothing depends on what
+The toolchain is pinned by a Nix flake against **nixpkgs 25.11** - node 22, python
+with playwright, a Chromium for the probe and git-lfs - so nothing depends on what
 happens to be installed.
 
 ```sh
@@ -130,20 +130,20 @@ nix run .#serve              # serve that build
 
 ## Features
 
-- **00 Optics** — model the laser wavelength and width, the lens band-pass
+- **00 Optics** - model the laser wavelength and width, the lens band-pass
   filter, the ambient light and the sensor response, with live spectrum and RGB
   plots.
-- **01 Rig** — camera and laser geometry with an interactive 3D preview of the
+- **01 Rig** - camera and laser geometry with an interactive 3D preview of the
   head, the field of view and the projected light sheet.
-- **02 Calibration** — ChArUco corner detection, camera intrinsics and
+- **02 Calibration** - ChArUco corner detection, camera intrinsics and
   distortion, board pose, laser-plane and affine command-to-plane fitting.
-- **03 Object scan** — per-frame sub-pixel stripe extraction (full-frame and
+- **03 Object scan** - per-frame sub-pixel stripe extraction (full-frame and
   calibration-derived ROI, several estimators, colour and monochrome paths),
   with scatter-tail recovery for saturated or faint lines.
-- **04 Dense 3D result** — an interactive viewer with orbit, pan and zoom, plus
+- **04 Dense 3D result** - an interactive viewer with orbit, pan and zoom, plus
   **PLY** and **JSON** export.
-- **Private by construction** — no upload, no telemetry, no server round trip.
-- **Dependency-free runtime** — plain ES modules, no bundler and no framework.
+- **Private by construction** - no upload, no telemetry, no server round trip.
+- **Dependency-free runtime** - plain ES modules, no bundler and no framework.
 
 ## Project layout
 
@@ -169,13 +169,13 @@ nix run .#serve              # serve that build
 ```
 
 The `demo/` tree holds 12 calibration frames per rig. Validation ships all five
-scenes the page offers — `bin`, `bottles`, `bridge`, `rail` and `plush` — for
+scenes the page offers - `bin`, `bottles`, `bridge`, `rail` and `plush` - for
 both rigs, so no card is ever selectable without data behind it. `bin` carries
 the largest set (12 lines for the moving rig, each with its own truth volume,
 and 40 for the fixed rig, which shares one truth volume); the other scenes carry
 6 moving lines (one truth volume each, ~0.35 MiB quantised, because a volume describes a
 single camera pose and cannot be shared) and 24 fixed lines. The multi-gigabyte
-HD capture sequences are **not** shipped — see
+HD capture sequences are **not** shipped - see
 [Regenerating things](#regenerating-things).
 
 ## Documentation
@@ -224,10 +224,10 @@ binary path from `NIDVUE_CHROMIUM` and optionally the port from
 
 Required:
 
-- **WebAssembly** — the extraction/calibration kernel.
-- **Web Workers** — the kernel and ChArUco work run off the main thread.
-- **OffscreenCanvas** — image processing off the main thread.
-- **DecompressionStream** — reading the compressed dataset volumes.
+- **WebAssembly** - the extraction/calibration kernel.
+- **Web Workers** - the kernel and ChArUco work run off the main thread.
+- **OffscreenCanvas** - image processing off the main thread.
+- **DecompressionStream** - reading the compressed dataset volumes.
 
 **WebGPU** is optional. When it is unavailable the spectral and viewer previews
 fall back to **WebGL2** and then to a **CPU** path, so the pipeline still runs.
@@ -236,7 +236,7 @@ fall back to **WebGL2** and then to a **CPU** path, so the pipeline still runs.
 
 The repository ships prebuilt artefacts so a fresh clone runs with no toolchain.
 
-- **Kernel** — `runtime/core.wasm` is compiled from the AssemblyScript source
+- **Kernel** - `runtime/core.wasm` is compiled from the AssemblyScript source
   `kernel/oss.ts` (shipped here) with
   `asc --runtime stub --exportRuntime`:
 
@@ -245,12 +245,12 @@ The repository ships prebuilt artefacts so a fresh clone runs with no toolchain.
   npm run build:kernel
   ```
 
-- **Demo dataset** — `node tools/make-demo-dataset.mjs` rebuilds `demo/` from
+- **Demo dataset** - `node tools/make-demo-dataset.mjs` rebuilds `demo/` from
   the upstream rendered `public/laser/hd/` capture tree. That HD tree (and its
   `*.f32.gz` volumes) is **not** shipped here: it is a generated build input
   ignored by Git, so this script only works in a checkout that has it.
 
-- **index.html** — `node tools/build-index.mjs` regenerates the prebuilt
+- **index.html** - `node tools/build-index.mjs` regenerates the prebuilt
   English page from the upstream content and page template.
 
 ## Licence and attribution
