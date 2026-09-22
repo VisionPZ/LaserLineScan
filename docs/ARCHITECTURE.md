@@ -47,7 +47,7 @@ bundler.
 | Optics model | `spectral.js` | Wavelength-grid model: laser, filter, sensor QE and ambient, plus the capture transform (`spectralModel`, `transformSpec`, `applySpectral`). |
 | Optics renders | `spectral-plot.js`, `spectral-gl.js` | The interactive spectrum plot; the GPU/CPU frame re-render (`applySpectralFrame`) and the WebGL2 spectrum canvas. |
 | Calibration | `board-pose.js`, `charuco-worker.js`, `encoder-model.js` | ChArUco detection (`detectView`), camera calibration (`calibrateViews`), board pose (`poseView`), plane/ROI orchestration, the two-axis encoder map (`fitEncoderModel`, `planeAt`). |
-| Scan | `worker.js` | The job runner: pre-buffer, decode, shade, extract, verify, recover, triangulate, score. |
+| Scan | `worker.js` | The job runner: prefetch, decode, shade, extract, verify, recover, triangulate, score. |
 | Scan helpers | `rows-pca.js`, `stripe-roi.js`, `scatter.js` | The learned row gate, the calibration-derived search band, and scatter/saturation recovery. |
 | Rendering | `viewer.js`, `rig-scene.js` | The measured point-cloud viewer and the procedural rig scene. |
 | Kernel | `../runtime/core.wasm` | The AssemblyScript stripe extractor, plane fits and per-pixel capture transform (upstream source `assembly/laser/oss.ts`). |
@@ -72,11 +72,12 @@ worker exchange a small, typed message protocol:
 | worker → app | `error` | `{type, message}` |
 | app → worker | `frame-shown` | `{type, done}` backpressure acknowledgement |
 
-Two rules make the scan deterministic:
+Two mechanisms coordinate frame processing:
 
-- **Pre-buffering.** `bufferFrames` downloads the whole split (up to eight
-  parallel fetches) and reports `buffering` progress before processing begins,
-  so the scan never waits on the network mid-frame.
+- **Prefetching.** `startFrames` queues frame downloads and reports `buffering`
+  progress as they finish. Processing can start before the whole split arrives;
+  each frame waits for its download and decode. Browser connection scheduling
+  controls the network concurrency.
 - **Backpressure.** `read()` in `worker.js` posts a `progress` message with the
   decoded blob and then waits for the app's `frame-shown` acknowledgement
   before the next frame. Processing therefore cannot skip a frame the user
@@ -87,6 +88,8 @@ Two rules make the scan deterministic:
 search-band outline from the same geometry the worker used, then acknowledges.
 For calibration the worker emits detected corners (`extra.view`) for the live
 overlay; the frame view draws the ROI band for later frames.
+The worker sends the completed cloud in one `result` message; the viewer's
+reveal animation begins after that message, not during reconstruction.
 
 ## WebAssembly kernel boundary
 
@@ -97,7 +100,8 @@ overlay; the frame view draws the ROI band for later frames.
 wasm = (await WebAssembly.instantiate(binary, {env:{abort(){throw new Error('Numerical kernel aborted');}}})).instance.exports;
 ```
 
-The kernel is compiled from the upstream `assembly/laser/oss.ts` with the
+The kernel is compiled from the packaged `kernel/oss.ts` (mirrored from the
+upstream `assembly/laser/oss.ts`) with the
 AssemblyScript compiler and is shipped pre-built (`--runtime stub
 --exportRuntime`, per the package `README.md`). It holds fixed-capacity static
 buffers: `1920 × 1080` pixels, `1920` stripe columns, and `240000` reference
@@ -112,7 +116,7 @@ through copies of objects:
 | `configureImage(width, height, stride)` | Sets the image size and bytes-per-pixel (4 = colour RGBA, 1 = monochrome; a `0` stride selects 4). |
 | `inputPtr()`, `stripePtr()` | The uploaded pixel buffer and the returned `[u, v, score]` triples. |
 | `bandTopPtr()`, `bandBottomPtr()` | The per-column search band (`extractBanded`). |
-| `excludedMaxPtr()`, `excludedRowPtr()`, `thresholdValue()` | Per-column strongest excluded score/row and the full-sensor threshold for verification. |
+| `excludedMaxPtr()`, `excludedRowPtr()`, `thresholdValue()` | Per-column strongest integer-binned excluded score/row and the threshold sampled across all rows of the horizontal ROI. |
 | `shadingCurvePtr()` | The 91-sample angle-gain curve for `configureShading`. |
 | `extract` / `extractBanded` | Full-sensor and banded stripe extraction over four estimators. |
 | `verifyExcluded(mode, left, right)` | Counts columns whose out-of-band score still exceeds the threshold. |
@@ -120,6 +124,7 @@ through copies of objects:
 | `addPlanePoint` / `fitPlane` | Robust IRLS fit of the ChArUco laser plane (optionally constrained to a known emitter). |
 | `depth` / `generalDepth` | Ray/plane intersection helpers. |
 | `configureShading`, `shade`, `clearShading` | The per-pixel capture transform, with a field computed once per job. |
+| `setScorePlane(w0, w1, w2, floor)` | Designed-colour projection direction and approximate background level for score mode 2. |
 | `reset()` | Clears the accumulated calibration samples. |
 
 The worker reads and writes these buffers with typed-array views over

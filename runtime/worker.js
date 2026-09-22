@@ -12,13 +12,31 @@ async function get(url,type='json'){
   if(type==='buffer'&&String(url).endsWith('.gz'))return new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
   return type==='json'?response.json():type==='blob'?response.blob():response.arrayBuffer();
 }
-// Fetch every frame image into memory before a job starts, reporting progress,
-// so the scan itself never waits on the network. Failures propagate to the UI.
-async function bufferFrames(frames,base){
+// Start fetching every frame image, reporting progress as each one lands. The
+// map holds *promises*, so the transfers of the later frames overlap the
+// processing of the earlier ones instead of finishing first: the network never
+// sits idle while the CPU works. A failure still surfaces when the frame is
+// read.
+function startFrames(frames,base){
   const buffered=new Map();let next=0,done=0;
-  const run=async()=>{while(next<frames.length){const frame=frames[next++];buffered.set(frame.file,await get(new URL(frame.file,base),'blob'));self.postMessage({type:'buffering',done:++done,total:frames.length});}};
-  await Promise.all(Array.from({length:Math.min(8,frames.length)},run));
+  const run=async()=>{while(next<frames.length){const frame=frames[next++];const blob=get(new URL(frame.file,base),'blob');
+    buffered.set(frame.file,blob);
+    // Keep a rejection from escaping as unhandled if the job fails before this
+    // frame is read; the consumer still sees it on its own promise.
+    blob.then(()=>self.postMessage({type:'buffering',done:++done,total:frames.length}),()=>{});
+  }};
+  // The browser caps connections per host anyway; eight keeps the queue fed.
+  Array.from({length:Math.min(8,frames.length)},run);
   return buffered;
+}
+// Truth volumes are depth maps: gzipped float32 by default, or uint16 when the
+// manifest declares it (a demo build quantises them — about a third of the size,
+// with a quantum far below the error the scan reports). 0 always means "no data".
+function decodeTruth(buffer,encoding){
+  if(!encoding||encoding.type!=='u16')return new Float32Array(buffer);
+  const counts=new Uint16Array(buffer),scale=encoding.scale,offset=encoding.offset||0,out=new Float32Array(counts.length);
+  for(let i=0;i<counts.length;i++){const v=counts[i];out[i]=v?v*scale+offset:0;}
+  return out;
 }
 function sample(depth,x,y,width,height){
   const u=Math.floor(x-.5),v=Math.floor(y-.5);
@@ -78,16 +96,22 @@ self.onmessage=async({data})=>{
     new Float64Array(wasm.memory.buffer,wasm.shadingCurvePtr(),91).set(curve);
     wasm.configureShading(ambient,laser,tint[0],tint[1],tint[2],color[0],color[1],color[2],cx,cy,focal,maxAngle);
   }
+  // The kernel's blue-excess family only sees a blue line, and with a spectral
+  // design the line is drawn in the *designed* colour: score along that
+  // direction instead (kernel mode 2). Declared before the frame readers because
+  // the calibration path reads frames too.
+  const spectralScore=!mono&&!!config.spectral&&typeof wasm.setScorePlane==='function';
+  const scoreMode=spectralScore?2:config.channel;
   if(!calibrating&&['width','height','unitMm'].some(k=>manifest[k]!==calibration.camera[k]))throw new Error('incompatible');
   const canvas=new OffscreenCanvas(width,height),ctx=canvas.getContext('2d',{willReadFrequently:true});
   const frames=config.direction===manifest.direction?manifest[split]:[...manifest[split]].reverse();
   let done=0,buffered;
   // Expand only the columns whose excluded score still exceeds the threshold,
   // up to the pass budget; anything left after that stays unqualified.
-  const recoverBand=(band,verify)=>{
+  const recoverBand=(band,verify,mode)=>{
     if(!(band&&verify&&verify.right>verify.left))return null;
     const writeBand=()=>{new Int32Array(wasm.memory.buffer,wasm.bandTopPtr(),width).set(band.top);new Int32Array(wasm.memory.buffer,wasm.bandBottomPtr(),width).set(band.bottom);};
-    let passes=0,expandedColumns=0,count=null,flagged=wasm.verifyExcluded(config.channel,verify.left,verify.right);
+    let passes=0,expandedColumns=0,count=null,flagged=wasm.verifyExcluded(mode,verify.left,verify.right);
     while(flagged>0&&passes<verify.maxPasses){
       const colMax=new Int32Array(wasm.memory.buffer,wasm.excludedMaxPtr(),width);
       const colRow=new Int32Array(wasm.memory.buffer,wasm.excludedRowPtr(),width);
@@ -102,9 +126,9 @@ self.onmessage=async({data})=>{
         expanded++;
       }
       if(!expanded)break;
-      writeBand();count=wasm.extractBanded(config.channel,config.quantile,config.threshold,config.estimator,config.roi/100);
+      writeBand();count=wasm.extractBanded(mode,config.quantile,config.threshold,config.estimator,config.roi/100);
       expandedColumns+=expanded;passes++;
-      flagged=wasm.verifyExcluded(config.channel,verify.left,verify.right);
+      flagged=wasm.verifyExcluded(mode,verify.left,verify.right);
     }
     return{passes,expandedColumns,remaining:flagged,qualified:flagged===0,count};
   };
@@ -112,16 +136,16 @@ self.onmessage=async({data})=>{
   // the next frames are decoded while the current one is processed. Three frames
   // in flight costs about 25 MB of ImageBitmaps and hides most of the decode.
   const decoded=new Map();let decodeAt=0;
-  const primeDecode=()=>{while(decoded.size<3&&decodeAt<frames.length){const f=frames[decodeAt++];decoded.set(f.file,createImageBitmap(buffered.get(f.file)).catch(()=>null));}};
+  const primeDecode=()=>{while(decoded.size<3&&decodeAt<frames.length){const f=frames[decodeAt++];decoded.set(f.file,buffered.get(f.file).then(blob=>createImageBitmap(blob)).catch(()=>null));}};
   const takeDecoded=async frame=>{
     const held=decoded.get(frame.file);decoded.delete(frame.file);
-    const bitmap=held?await held:createImageBitmap(buffered.get(frame.file));
+    const bitmap=held?await held:createImageBitmap(await buffered.get(frame.file));
     primeDecode();
-    return bitmap||createImageBitmap(buffered.get(frame.file));
+    return bitmap||createImageBitmap(await buffered.get(frame.file));
   };
   const read=async(frame,processFrame,band=null,gate=null,verify=null)=>{
     const processingStarted=performance.now();
-    const blob=buffered.get(frame.file)||await get(new URL(frame.file,base),'blob'),bitmap=await takeDecoded(frame);ctx.drawImage(bitmap,0,0);bitmap.close();
+    const blob=await (buffered.get(frame.file)||get(new URL(frame.file,base),'blob')),bitmap=await takeDecoded(frame);ctx.drawImage(bitmap,0,0);bitmap.close();
     const pixels=ctx.getImageData(0,0,width,height).data;
     // Re-render the capture for the illumination designed in step 0, so the
     // point cloud and its colours match the frames shown to the user. The
@@ -132,6 +156,23 @@ self.onmessage=async({data})=>{
       wasm.shade();
       pixels.set(new Uint8Array(wasm.memory.buffer,wasm.inputPtr(),pixels.length));
     }else if(!mono&&config.spectral)applySpectral(pixels,{...config.spectral,width,height});
+    // Score along the designed stripe direction (kernel mode 2): the line is
+    // drawn in the *designed* colour, which blue-excess cannot see. The level is
+    // the projection's median, so it tracks exposure and vignetting per frame.
+    // Sampled every 4th pixel — the median is robust to that and it keeps the
+    // per-frame cost near 100 us instead of 5 ms.
+    if(spectralScore){
+      const c=config.spectral.color,n=Math.hypot(c[0],c[1],c[2])||1;
+      const w0=c[0]/n,w1=c[1]/n,w2=c[2]/n;
+      const hist=new Uint32Array(512);let total=0;
+      for(let i=0;i<pixels.length;i+=16){
+        const v=w0*pixels[i]+w1*pixels[i+1]+w2*pixels[i+2];
+        hist[v<0?0:v>511?511:v|0]++;total++;
+      }
+      let acc=0,level=0;
+      for(let v=0;v<512;v++){acc+=hist[v];if(acc>=total/2){level=v+0.5;break;}}
+      wasm.setScorePlane(w0,w1,w2,level);
+    }
     if(mono){
       // Only the intensity crosses into wasm: 2 MB instead of 8.3 MB per frame.
       for(let i=0,j=0;i<pixels.length;i+=4,j++)gray[j]=pixels[i];
@@ -141,8 +182,8 @@ self.onmessage=async({data})=>{
       new Uint8Array(wasm.memory.buffer,wasm.inputPtr(),pixels.length).set(pixels);
     }
     if(band){new Int32Array(wasm.memory.buffer,wasm.bandTopPtr(),width).set(band.top);new Int32Array(wasm.memory.buffer,wasm.bandBottomPtr(),width).set(band.bottom);}
-    let n=band?wasm.extractBanded(config.channel,config.quantile,config.threshold,config.estimator,config.roi/100):wasm.extract(config.channel,config.quantile,config.threshold,config.estimator,config.roi/100);
-    const recovery=band?recoverBand(band,verify):null;
+    let n=band?wasm.extractBanded(scoreMode,config.quantile,config.threshold,config.estimator,config.roi/100):wasm.extract(scoreMode,config.quantile,config.threshold,config.estimator,config.roi/100);
+    const recovery=band?recoverBand(band,verify,scoreMode):null;
     if(recovery&&recovery.count!==null)n=recovery.count;
     const stripe=new Float64Array(wasm.memory.buffer,wasm.stripePtr(),n*3).slice();
     const extra=processFrame?processFrame(pixels):{};
@@ -156,9 +197,10 @@ self.onmessage=async({data})=>{
     });
     return{stripe,pixels,recovery,...extra};
   };
-  // Buffer the whole split first: the progress bar fills during the download
-  // and the scan starts only once every frame is held locally.
-  buffered=await bufferFrames(frames,base);
+  // Start the downloads and process as they land: decoding and stripe detection
+  // for one frame overlap the transfers of the rest, so calibration and scanning
+  // are not stalled behind a full pre-download.
+  buffered=startFrames(frames,base);
   primeDecode();
   if(calibrating){
     let recovered;
@@ -186,11 +228,23 @@ self.onmessage=async({data})=>{
   // The learned row gate is a blue-excess basis trained on the colour captures,
   // so it does not transfer to a monochrome frame; a mono deployment would
   // retrain it with tools/laser/rows-pca.py.
-  const gate=mono?null:config.channel===0?await getRowGate():null;
+  // The row gate is a blue-excess basis, so it does not apply to mode 2.
+  const gate=mono||spectralScore?null:config.channel===0?await getRowGate():null;
   const uncertainty=bandUncertaintyOptions(calibration,manifest,config);
   const lateralLeft=Math.floor(width*(1-config.roi/100)/2),lateralRight=width-lateralLeft;
   const verifyColumns=objectColumns||[lateralLeft,lateralRight];
   let scannedRows=0,rowTotal=0,outOfBandColumns=0,activeColumns=0,fallbackFrames=0,unqualifiedFrames=0,verifiedFrames=0,recoveredColumns=0;
+  // Truth for a line is fetched and inflated while the later lines are still
+  // being measured, so the download and its gzip inflation overlap the stripe
+  // detection that dominates a scan instead of following it. The window is
+  // bounded — one line's truth is a full frame of float32 (~8 MiB) — and the
+  // fixed rig shares a single volume for the whole scene.
+  const commonTruth=manifest.validationTruth?decodeTruth(await get(new URL(manifest.validationTruth,base),'buffer'),manifest.truthEncoding):null;
+  const truthPending=new Map();let truthNext=0;
+  const truthAhead=commonTruth?0:(config.truthAhead??config.truthBatch??8);
+  const pumpTruth=()=>{while(truthAhead&&truthNext<frames.length&&truthPending.size<truthAhead){const ahead=frames[truthNext++];truthPending.set(ahead.file,ahead.truth?get(new URL(ahead.truth,base),'buffer').then(buffer=>decodeTruth(buffer,manifest.truthEncoding)):Promise.resolve(null));}};
+  pumpTruth();
+  const errorList=[];let squared=0,scored=0,expected=0,maxError=0;
   for(const frame of frames){
     const plane=framePlane(calibration,manifest,frame);
     if(manifest.acquisition&&!plane)throw new Error('incompatible');
@@ -206,6 +260,7 @@ self.onmessage=async({data})=>{
       if(extra.length){const merged=new Float64Array(stripe.length+extra.length*3);merged.set(stripe);extra.forEach((p,i)=>{merged[stripe.length+i*3]=p.x;merged[stripe.length+i*3+1]=p.y;merged[stripe.length+i*3+2]=p.amplitude;});stripe=merged;recoveredColumns+=extra.length;}
     }
     if(band){scannedRows+=bandRows(band,height);rowTotal+=width*height;activeColumns+=Math.max(0,verifyColumns[1]-verifyColumns[0]);if(recovery){verifiedFrames++;outOfBandColumns+=recovery.expandedColumns;if(recovery.expandedColumns)fallbackFrames++;if(!recovery.qualified)unqualifiedFrames++;}}
+    const firstObs=observations.length;
     for(let i=0;i<stripe.length;i+=3){
       const u=stripe[i],v=stripe[i+1],[xu,yu]=undistortPoint(u,v,cam,cam.model);
       const z=plane?plane[2]/(plane[0]*xu+yu+plane[1]):
@@ -216,38 +271,41 @@ self.onmessage=async({data})=>{
       const p=(Math.floor(v)*width+Math.floor(u))*4;colors.push(pixels[p]/255,pixels[p+1]/255,pixels[p+2]/255);
       observations.push({u,v,x:xu,y:yu,su:xu*tfx+tcx,sv:yu*tfy+tcy,z,t:frame.t,frame:frame.file});
     }
-  }
-  if(points.length<90)throw new Error('noValidation');
-  // Truth is deliberately first fetched AFTER all displayed points exist.
-  const commonTruth=manifest.validationTruth?new Float32Array(await get(new URL(manifest.validationTruth,base),'buffer')):null;
-  const errors=new Float32Array(observations.length);errors.fill(-1);let squared=0,scored=0,expected=0,maxError=0;
-  const byFrame=new Map();observations.forEach((o,i)=>{if(!byFrame.has(o.frame))byFrame.set(o.frame,[]);byFrame.get(o.frame).push(i);});
-  for(const frame of frames){
-    const truth=commonTruth||new Float32Array(await get(new URL(frame.truth,base),'buffer'));
-    if(truth.length!==width*height)throw new Error('Invalid validation truth');
-    (byFrame.get(frame.file)||[]).forEach(i=>{
-      const {x,y,su,sv}=observations[i];
-      const z=sample(truth,su,sv,width,height);if(!z)return;
-      const translation=frame.translation||[0,0,0],target=[x*z,y*z,z];
-      const error=Math.hypot(...target.map((p,k)=>(p-translation[k])*unitMm-points[i*3+k]));errors[i]=error;squared+=error*error;maxError=Math.max(maxError,error);scored++;
-    });
-    // Honest coverage: a column is scannable when the frame's calibrated plane
-    // crosses the truth surface inside the reconstruction depth range, whether
-    // or not a stripe is visible there. This counts occluded and under-threshold
-    // stripes as expected, so coverage cannot hide physically missing points.
-    const [A,B,C]=framePlane(calibration,manifest,frame);
-    for(let x=0;x<width;x++){
-      const xu=(x+.5-tcx)/tfx;let pz=null,pt=null;
-      for(let y=0;y<height;y++){
-        const zt=truth[y*width+x];
-        if(!zt){pz=pt=null;continue;}
-        const zp=C/(A*xu+(y+.5-tcy)/tfy+B);
-        if(!(zp>=1&&zp<=8)){pz=pt=null;continue;}
-        if(pz!==null&&(pz-pt)*(zp-zt)<=0){expected++;break;}
-        pz=zp;pt=zt;
+    // Score this line against the truth that downloaded while it was measured.
+    // Observations are appended in frame order, so the errors line up with them
+    // by index.
+    if(commonTruth||truthAhead){
+      const truth=commonTruth||await truthPending.get(frame.file);truthPending.delete(frame.file);pumpTruth();
+      if(!truth||truth.length!==width*height)throw new Error('Invalid validation truth');
+      const translation=frame.translation||[0,0,0];
+      for(let i=firstObs;i<observations.length;i++){
+        const {x,y,su,sv}=observations[i];
+        const z=sample(truth,su,sv,width,height);
+        if(!z){errorList.push(-1);continue;}
+        const target=[x*z,y*z,z];
+        const error=Math.hypot(...target.map((p,k)=>(p-translation[k])*unitMm-points[i*3+k]));
+        errorList.push(error);squared+=error*error;maxError=Math.max(maxError,error);scored++;
+      }
+      // Honest coverage: a column is scannable when the frame's calibrated plane
+      // crosses the truth surface inside the reconstruction depth range, whether
+      // or not a stripe is visible there. This counts occluded and under-threshold
+      // stripes as expected, so coverage cannot hide physically missing points.
+      const [A,B,C]=plane;
+      for(let x=0;x<width;x++){
+        const xu=(x+.5-tcx)/tfx;let pz=null,pt=null;
+        for(let y=0;y<height;y++){
+          const zt=truth[y*width+x];
+          if(!zt){pz=pt=null;continue;}
+          const zp=C/(A*xu+(y+.5-tcy)/tfy+B);
+          if(!(zp>=1&&zp<=8)){pz=pt=null;continue;}
+          if(pz!==null&&(pz-pt)*(zp-zt)<=0){expected++;break;}
+          pz=zp;pt=zt;
+        }
       }
     }
   }
+  if(points.length<90)throw new Error('noValidation');
+  const errors=Float32Array.from(errorList);
   self.postMessage({type:'result',dataset:calibration.dataset,validationDataset:dataset,config,fit:calibration.fit,planeFits:calibration.planeFits,encoderModel:calibration.encoderModel,planeSummary:calibration.planeSummary,boardMetrics:calibration.boardMetrics,scanTopology:manifest.scanTopology,
     points:new Float32Array(points),colors:new Float32Array(colors),errors,observations,
     metrics:{points:points.length/3,scored,expected,rmse:scored?Math.sqrt(squared/scored):null,maxError,coverage:expected?Math.min(1,scored/expected):0,stripeRoi:roiDepth,scanFraction:rowTotal?scannedRows/rowTotal:1,bandMode:config.bandMode==='fixed'?'fixed':'uncertainty',bandSigmaK:uncertainty.k,verified:verifiedFrames>0&&unqualifiedFrames===0,verifiedFrames,recoveredColumns,outOfBandRate:activeColumns?outOfBandColumns/activeColumns:0,fallbackFrames,unqualifiedFrames},

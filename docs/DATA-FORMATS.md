@@ -15,7 +15,8 @@ them is in [SCAN-PIPELINE.md](SCAN-PIPELINE.md) and
 
 ## Directory layout
 
-The runtime resolves every asset relative to the package root. The demo tree
+The runtime resolves capture paths relative to the package root and module
+assets relative to `runtime/`. The demo tree
 is committed and complete; the full-resolution trees are generated build
 inputs.
 
@@ -29,28 +30,30 @@ demo/
     manifest.json
     preview.webp
     validation-000.jpg …             # validation frames
-    surface-depth.f32.gz             # shared truth volume (some splits)
-    validation-truth-000.f32.gz …    # per-frame truth volume (other splits)
+    surface-depth.u16.gz             # shared truth volume (some splits)
+    validation-truth-000.u16.gz …    # per-frame truth volume (other splits)
 ```
 
 - `<rig>` is `charuco-moving-board` or `charuco-fixed-board` (`manifest.rigId`).
-- `<scene>` is an object scene id (`bin` in the shipped demo; the upstream
-  release adds `bottles`, `bridge`, `plush` and `rail`).
+- `<scene>` is one of the five packaged object scenes: `bin`, `bottles`,
+  `bridge`, `plush` or `rail`.
 - `hd/` and `hd-mono/` mirror the same two layouts at full resolution
   (`hd/calibration/<rig>/`, `hd/validation/<rig>/<scene>/`). They are ignored
   by Git (`.gitignore`) and absent from a clone; the upstream generator
   `tools/laser/render-hd.py` and `tools/laser/make-mono-dataset.py` produce
-  them. The app switches between them with the `?mono=1` query flag
+  them. The packaged app reads colour captures from `demo/`; `?mono=1`
+  selects `hd-mono/validation/`, which must be generated separately
   (`app.js` `datasetBase`, `MONO`).
 
 `make-demo-dataset.mjs` states and enforces the demo counts:
 
 | Split | Frames shipped | Truth |
 | --- | ---: | --- |
-| `charuco-moving-board` calibration | 12 | — |
-| `charuco-fixed-board` calibration | 12 | — |
-| `charuco-moving-board/bin` validation | 12 | per-frame `validation-truth-NNN.f32.gz` |
-| `charuco-fixed-board/bin` validation | 40 | shared `surface-depth.f32.gz` |
+| `charuco-moving-board` calibration | 50 | — |
+| `charuco-fixed-board` calibration | 50 | — |
+| `charuco-moving-board/<scene>` validation | 12 per scene | per-frame `validation-truth-NNN.u16.gz` |
+| `charuco-fixed-board/bin` validation | 40 | shared `surface-depth.u16.gz` |
+| `charuco-fixed-board/<other-scene>` validation | 24 per scene | shared `surface-depth.u16.gz` |
 
 The fixed-board split carries more frames because the kernel returns at most one
 point per image column, so 12 frames of a 1920 px image cannot reach the
@@ -69,8 +72,8 @@ validation images per scene (`public/laser/DATASET-CARD.md`). The parent
 - Calibration frames: `calibration-NNN.jpg` (`NNN` is a zero-padded sequence
   number; the shipped demo files are evenly spaced copies of upstream frames).
 - Validation frames: `validation-NNN.jpg`.
-- Per-frame truth: `validation-truth-NNN.f32.gz`.
-- Shared truth: `surface-depth.f32.gz`.
+- Per-frame truth: `validation-truth-NNN.u16.gz`.
+- Shared truth: `surface-depth.u16.gz`.
 - Every split carries one `preview.webp`.
 
 All JPEGs are native 1920 × 1080 at quality 96, 4:4:4 chroma sampling
@@ -145,14 +148,18 @@ they exist so the offline `verify-*.py` tools can identify a release
 
 ## Truth volumes
 
-A truth volume is a raw little-endian `Float32` array of `width × height`
-depth values in model units (multiply by `unitMm` for millimetres), gzip
-compressed as `*.f32.gz`. The worker fetches it through `DecompressionStream`
-(the `get(..., 'buffer')` helper in `worker.js`) and samples it as described in
-[SCAN-PIPELINE.md](SCAN-PIPELINE.md): bilinear interpolation with a
-discontinuity guard, and it is loaded **only after** all displayed points
-exist. The demo ships its small truth volumes so its manifests are complete
-without the HD capture tree (`.gitignore` exception).
+A truth volume contains `width × height` depth values in model units
+(multiply by `unitMm` for millimetres). The package stores quantised
+little-endian `Uint16` counts in `*.u16.gz`, with the scale and optional offset
+declared by `truthEncoding`; the reader also accepts `Float32` values in
+`*.f32.gz`. The worker decompresses each map through `DecompressionStream`
+and decodes it into a `Float32Array`. It loads a shared map before scanning or
+prefetches per-frame maps through a bounded lookahead. Each frame's points are
+reconstructed before that frame is scored against the map using bilinear
+interpolation with a discontinuity guard, as described in
+[SCAN-PIPELINE.md](SCAN-PIPELINE.md). Reference samples do not determine the
+triangulated point coordinates. The demo includes these maps so it runs
+without the HD capture tree.
 
 ## `hd` versus `hd-mono`
 
@@ -240,3 +247,22 @@ and plane tables plus the honesty notice; they are documented in
 The GPL-3.0-or-later licence and the required attribution notice covering these
 files are in [COMMERCIAL-USE.md](COMMERCIAL-USE.md) and
 [`../NOTICE`](../NOTICE).
+
+## Truth volume encoding
+
+The packaged depth maps use one map per line for the moving rig and one shared
+map per scene for the fixed rig. They are **quantised to uint16**: one count
+holds `8.5 / 65534` model units, or approximately **0.013 mm** at 100 mm per
+model unit. A stored `0` means "no data". The manifest declares the encoding:
+
+```json
+"truthEncoding": { "type": "u16", "scale": 0.00012970366527298807 }
+```
+
+An omitted encoding (or `type: "f32"`) means gzipped float32, as produced by
+the renderer. Quantisation reduces transfer size; decoding still allocates a
+float32 working array and does not recover the lost precision. It leaves
+reconstructed point coordinates unchanged because those coordinates do not
+use the reference samples, but can change evaluation error and coverage.
+The hosted captures can use a different revision and per-frame reference
+layout; read each manifest rather than assuming this package's layout.

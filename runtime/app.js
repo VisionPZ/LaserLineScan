@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 import {calibrationMarkdown,calibrationPowerpoint} from './calibration-report.js';
 import {searchBand,bandCoverage} from './stripe-roi.js';
 import {spectralModel,transformSpec,applySpectral,transmissionAt,controlPointsFor,AMBIENT_PRESETS,LASER_PRESETS,FILTER_PRESETS,SENSOR_PRESETS,LAMBDA_MIN,LAMBDA_MAX} from './spectral.js';
@@ -22,6 +21,11 @@ const curveOverrides={laser:null,filter:null,ambient:null,qe:null};
 const CURVE_CONTROLS={laser:['laser-preset','laser-fwhm','laser-modes'],filter:['filter-preset','filter-fwhm','filter-peak','filter-od'],qe:['sensor-preset'],ambient:['ambient-preset','ambient-level']};
 let spectralDesign=spectralModel(),spectrumPlot=null,curveMenu={series:null,index:-1},heavyPending=null;
 const imagePreviews=Object.fromEntries(['calibration','validation'].map(split=>[split,new ImagePreview($(split+'-scan'))]));
+// The last frame the calibration worker annotated. The end-of-run ROI pass must
+// re-apply it rather than replace it: the two are otherwise ordered by timing, and
+// a stale corner overlay would then sit on the final frame (the published figure's
+// off-by-one frame).
+let lastCalibrationCorners=null;
 // ?mono=1 loads the object scan from the single-channel dataset. The calibration
 // board stays on the colour path, and the worker detects the mono manifest from
 // its `channels` field.
@@ -58,6 +62,10 @@ function goStep(n,focus=true){
  step=n;root.dataset.step=String(n);
  root.querySelectorAll('[data-panel]').forEach(p=>{p.hidden=+p.dataset.panel!==n;p.classList.toggle('is-entering',+p.dataset.panel===n);});
  viewer?.setActive(n===4);rigViewer?.setActive(n===1);if(n!==4)stopOrbit();state();
+ // Reaching the scan step must leave something to scan: if the selected
+ // dataset's manifest has not been fetched yet, fetch it now rather than
+ // leaving the Scan button disabled until a card happens to be clicked.
+ if(n===3&&!manifests.validation)select('validation',datasets.validation);
  if(focus)requestAnimationFrame(()=>{root.querySelector('.ll-stepper').scrollIntoView({block:'start',behavior:'instant'});$(n===0?'setup-heading':n===1?'rig-heading':n===2?'dataset-heading':n===3?'validation-heading':'result-heading').focus({preventScroll:true});viewer?.draw();});
 }
 // Metric values are graded against the documented design targets, so a glance
@@ -140,8 +148,19 @@ async function select(split,id,force=false){
   if(split==='calibration'){
    form.reset();
    root.querySelectorAll('[data-validation-dataset]').forEach(b=>{b.querySelector('img').src=new URL(`demo/validation/${id}/${b.dataset.validationDataset}/preview.webp`,base).href;});
-  }else{$('validation-object').textContent=text(id+'Object');}
-  const p=prefix(split),download=$(p+'download');if(download&&data.download){download.href=new URL(data.download,url).href;download.textContent=text(split==='calibration'?'calibrationDownload':'validationDownload')+' · JPEG · '+Math.round((data.downloadBytes||0)/1048576)+' MB ↓';}
+  }else{
+   $('validation-object').textContent=text(id+'Object');
+   // The smaller standalone datasets have different counts per scene.
+   const frames=text('validationFrames');
+   root.querySelectorAll('[data-validation-dataset] small').forEach(el=>{const count=el.closest('[data-validation-dataset]').getAttribute('data-count-'+datasets.calibration)||String(data.validation.length);el.textContent=`${count} ${frames}`;});
+  }
+  // The capture archives are not published with this build, so the download
+  // affordance is optional: fill it in only when the page offers it and the
+  // manifest names an archive. Writing to a missing element threw here, aborting
+  // the rest of this function — which is why the frame, the counts and the
+  // status stayed empty on every visit to step 02 and 03.
+  const p=prefix(split),link=$(p+'download');
+  if(link&&data.download)link.href=new URL(data.download,url).href;
   await showFrame(split,0);if(version!==versions[split])return;
   status(split==='calibration'?'ready':compatible()?'validationReady':'validationWait',false,split);state();
   if(split==='calibration')await select('validation',datasets.validation);
@@ -195,7 +214,7 @@ function displayCalibration(data){
  // The ROI is known now: highlight it on the frame on screen, then on every
  // frame the user steps through.
  const current=frames('calibration')[+$('frame').value],roi=frameRoi('calibration',current);
- if(roi)imagePreviews.calibration.annotate({roi});
+ if(lastCalibrationCorners||roi)imagePreviews.calibration.annotate(lastCalibrationCorners?{...lastCalibrationCorners,roi}:{roi});
 }
 function displayValidation(data){
  result=data;viewer.setCloud(data,'front');viewer.orbit(true);$('orbit').setAttribute('aria-pressed','true');$('empty').hidden=true;const count=formats.number(data.metrics.points);$('points').textContent=count;$('viewer').dataset.recovered=String(data.metrics.recoveredColumns??0);
@@ -254,7 +273,7 @@ async function run(split){
    const p=prefix(split);$(p+'progress').max=data.total;$(p+'progress').value=data.done;$(p+'count').textContent=`${data.done} / ${data.total}`;status(data.stage==='fit'?'fitting':split==='calibration'?'processing':'reconstructing',false,split);
    if(data.file){try{
     const displayStarted=performance.now();
-    const view=data.extra?.view,roi=data.extra?.roi,annotation=view?{corners:view.img,ids:view.ids,columns:(manifests.calibration?.board?.squares?.[0]||8)-1}:roi?{roi}:null;
+    const view=data.extra?.view,roi=data.extra?.roi,annotation=view?{corners:view.img,ids:view.ids,columns:(manifests.calibration?.board?.squares?.[0]||8)-1}:roi?{roi}:null;if(view)lastCalibrationCorners=annotation;
     await showFrame(split,frames(split).findIndex(f=>f.file===data.file),{file:data.file},data.blob,annotation);
     const processingMs=(data.processingMs||0)+performance.now()-displayStarted,pace=$(p+'speed').value;
     // Work / (work + hold) = 0.75. Adapt to actual decoding/extraction speed.

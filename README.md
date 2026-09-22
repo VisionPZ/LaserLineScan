@@ -18,13 +18,15 @@ modified and used without a proprietary component hidden behind an API.
 
 ## Quick start
 
-**Hosted demo, no install:** [English](https://www.nidvue.com/laser-line-scan/) · [中文](https://www.nidvue.com/zh/laser-line-scan/) — this same code, running in the browser. It is the companion to the technical article [Laser Line Scanning: From Calibration to Sub-mm Geometry](https://www.nidvue.com/articles/laser-line-scan-defect-inspection/).
+**Hosted demo, no install:** [English](https://www.nidvue.com/laser-line-scan/) · [中文](https://www.nidvue.com/zh/laser-line-scan/). The hosted lab and this package share the processing pipeline; the package includes smaller demonstration capture sequences, so results need not match a hosted run. The technical article is available in [English](https://www.nidvue.com/articles/laser-line-scan-defect-inspection/) and [中文](https://www.nidvue.com/zh/articles/laser-line-scan-defect-inspection/).
 
-To run it yourself, no build step and no npm dependencies are needed. You need **Node.js 20 or newer** and a modern browser.
+To run it yourself, no build step and no npm dependencies are needed. You need **Node.js 20 or newer** and a modern browser. Install **Git LFS** before cloning the GitHub repository: it stores the capture images, reference depth, and compiled kernel.
 
 ```sh
-git clone https://github.com/VisionPZ/LaserLineScan.git
+git lfs install
+git clone https://github.com/VisionPZ/LaserLineScan.git laser-line-scan
 cd laser-line-scan
+git lfs pull
 node serve.mjs
 # open http://localhost:8080
 ```
@@ -95,26 +97,26 @@ Select a set, then **“▶ Start calibration”**.
 </picture>
 
 Each object frame is decoded, the stripe is extracted inside its geometric band, the rows the
-search excluded are verified and missing columns are recovered. The reconstruction accumulates
-in the viewer as the frames are measured. Select **“◇ Scan”**.
+search excluded are checked and missing-column recovery is attempted. Points accumulate in the
+worker; the result viewer receives the completed cloud after scanning finishes. Select **“◇ Scan”**.
 
 
-**Algorithm.** The score projects each pixel onto the designed color, $S=\max(0,\mathbf{w}^{\mathsf T}\mathbf{I}-\ell)$, where $\ell$ is the per-frame median background; geometry restricts the search to a row band $v(z,u)=c_y+f_y(C/z-B-Ax_u)$; rows the band excluded are verified against the threshold, and columns without a detection are recovered by a mixture fit. See [docs/SCAN-PIPELINE.md](docs/SCAN-PIPELINE.md).
+**Algorithm.** The score projects each pixel onto the designed color, $S=\max(0,\mathbf{w}^{\mathsf T}\mathbf{I}-\ell)$, where $\ell$ approximates the median projected background from sampled, binned pixels. Geometry restricts the search to a row band $v(z,u)=c_y+f_y(C/z-B-Ax_u)$; excluded rows are checked against the threshold, and recovery attempts to fill missing columns. Recovery still uses blue excess, so it does not provide the main detector's support for green and red designs. See [docs/SCAN-PIPELINE.md](docs/SCAN-PIPELINE.md).
 
 ### 04 Dense 3D result
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/step-04-result.webp">
-  <img alt="Step 04: the reconstructed point cloud, colored by distance, with the reported error and coverage" src="docs/screenshots/step-04-result-light.webp">
+  <img alt="Step 04: the reconstructed point cloud, colored by depth, with the reported error and coverage" src="docs/screenshots/step-04-result-light.webp">
 </picture>
 
-The completed scan: the cloud is colored by distance, alongside the reconstruction error, the
+The completed scan: the cloud is colored by depth, alongside the reconstruction error, the
 scan coverage and the search-verification status the run reports. The view can be orbited and the
 cloud exported as PLY.
 
 
 
-**Algorithm.** Each frame is scored against the depth rendered at its own pose, $e_f=s_{\mathrm{mm}}\lVert(\hat Z_f-Z_f^{\mathrm{ref}})\mathbf{r}\rVert_2$, and coverage is $\min(1,N_{\mathrm{scored}}/N_{\mathrm{expected}})$. The evaluation model is described in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/TESTING.md](docs/TESTING.md).
+**Algorithm.** Each frame's reconstructed points are scored against the reference depth named by its manifest, $e_f=s_{\mathrm{mm}}\lVert(\hat Z_f-Z_f^{\mathrm{ref}})\mathbf{r}\rVert_2$. The packaged moving-rig captures have per-frame depth maps; the packaged fixed-rig captures use one shared map per scene. Coverage is $\min(1,N_{\mathrm{scored}}/N_{\mathrm{expected}})$, an aggregate column ratio rather than surface-area completeness. The evaluation model is described in [docs/SCAN-PIPELINE.md](docs/SCAN-PIPELINE.md) and [docs/DATA-FORMATS.md](docs/DATA-FORMATS.md).
 
 ## Development environment (Nix)
 
@@ -155,7 +157,7 @@ nix run .#serve              # serve that build
 ```text
 .
 ├── .github/           CI workflow, issue and pull-request templates
-├── demo/              ~33 MB prebuilt demo capture set (calibration + validation)
+├── demo/              prebuilt demonstration captures (calibration + validation)
 ├── docs/              design notes and the commercial-use guide
 ├── runtime/           the shipped ES modules, vendored libraries and core.wasm
 ├── tests/             Node tests and the Playwright browser probe
@@ -173,13 +175,12 @@ nix run .#serve              # serve that build
 └── serve.mjs          zero-dependency static server
 ```
 
-The `demo/` tree holds 12 calibration frames per rig. Validation ships all five
+The `demo/` tree holds 50 calibration frames per rig. Validation ships all five
 scenes the page offers - `bin`, `bottles`, `bridge`, `rail` and `plush` - for
-both rigs, so no card is ever selectable without data behind it. `bin` carries
-the largest set (12 lines for the moving rig, each with its own truth volume,
-and 40 for the fixed rig, which shares one truth volume); the other scenes carry
-6 moving lines (one truth volume each, ~0.35 MiB quantised, because a volume describes a
-single camera pose and cannot be shared) and 24 fixed lines. The multi-gigabyte
+both rigs, so no card is selectable without data behind it. Each moving-rig
+scene carries 12 scan lines, each with its own truth volume because that volume
+describes a single camera pose. The fixed rig carries 40 lines for `bin` and
+24 for each other scene, with one shared truth volume per scene. The multi-gigabyte
 HD capture sequences are **not** shipped - see
 [Regenerating things](#regenerating-things).
 
@@ -210,7 +211,7 @@ The Node suite is dependency-free and needs no browser:
 node --test tests/unit/
 
 # Whole Node suite (unit + static integration): the `npm test` script.
-npm test            # runs: node --test tests/
+npm test            # all packaged Node tests
 ```
 
 The end-to-end browser probe starts `serve.mjs` itself, drives the wizard and

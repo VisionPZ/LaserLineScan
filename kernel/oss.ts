@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 /** Laser stripe extraction and parallel-plane calibration. All coordinates use
  * pixel centers (u + 0.5, v + 0.5). No validation geometry enters this kernel. */
 let WIDTH: i32 = 640;
@@ -59,8 +58,27 @@ export function excludedRowPtr(): usize { return changetype<usize>(excludedRow);
 export function thresholdValue(): f64 { return lastThreshold; }
 export function reset(): void { samples = 0; }
 
+// Mode 2 scores along the stripe colour the design actually produced, with the
+// frame's background level removed. Blue-excess (mode 0) can only see a blue
+// line, so a 520 nm or 660 nm design scores exactly zero there — measured at
+// AUC 0.500 (chance) against 0.86-0.91 for this projection. The worker sets the
+// plane once per frame; modes 0 and 1 are untouched.
+let scoreW0: f64 = 0.0, scoreW1: f64 = 0.0, scoreW2: f64 = 0.0, scoreFloor: f64 = 0.0;
+
+/** Stripe direction (unit vector) and background level used by mode 2. */
+export function setScorePlane(w0: f64, w1: f64, w2: f64, floor: f64): void {
+  scoreW0 = w0;
+  scoreW1 = w1;
+  scoreW2 = w2;
+  scoreFloor = floor;
+}
+
 function score(i: i32, mode: i32): f64 {
   if (STRIDE == 1) return <f64>unchecked(rgba[i]);
+  if (mode == 2) {
+    const s = scoreW0 * <f64>unchecked(rgba[i]) + scoreW1 * <f64>unchecked(rgba[i+1]) + scoreW2 * <f64>unchecked(rgba[i+2]) - scoreFloor;
+    return s > 0.0 ? s : 0.0;
+  }
   const b = <f64>rgba[i+2];
   return mode == 1 ? b : Math.max(0, b - Math.max(<f64>rgba[i], <f64>rgba[i+1]));
 }

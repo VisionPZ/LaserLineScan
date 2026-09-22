@@ -1,0 +1,214 @@
+{
+  "id": "moving-board-bridge",
+  "split": "validation",
+  "version": "2.3.0",
+  "width": 1920,
+  "height": 1080,
+  "fx": 1665,
+  "fy": 1665,
+  "cx": 960,
+  "cy": 540,
+  "truth": {
+    "fx": 1480,
+    "fy": 1480,
+    "cx": 960,
+    "cy": 540
+  },
+  "unitMm": 100,
+  "direction": "top-down",
+  "scanTopology": "ordered-horizontal",
+  "provenance": "Original concrete surface with irregular fractured edges, a rough recessed floor and exposed aggregate meshes; backing removed below the scanned patch. The same geometry supplies acquisition depth and evaluation.",
+  "coordinateSystem": "Camera: X right, Y down, Z forward; mm",
+  "limitations": "Synthetic acquisition with a simulated brown lens [-0.18, 0.045, 0.001, -0.0015, -0.008]; approximate radiometry. Accuracy is evaluated against synthetic geometry, not physical measurements. The dark fracture uses a lower material-response factor in the source images (approximately 25–39% of intact concrete at the cavity floor). Weak returns can be missed at the default threshold. Laser radiometry is approximate, not a measured material BRDF.",
+  "lens": {
+    "model": "brown",
+    "coefficients": [
+      -0.18,
+      0.045,
+      0.001,
+      -0.0015,
+      -0.008
+    ]
+  },
+  "laserAppearance": "Blue stripe with a weaker, uneven return from dark fractured concrete inside the missing section",
+  "calibrationId": "charuco-moving-board",
+  "rigId": "charuco-moving-board",
+  "scene": "bridge",
+  "name": "Drone bridge survey",
+  "object": "Concrete deck with a spalled joint",
+  "acquisition": "moving-board",
+  "validation": [
+    {
+      "file": "validation-000.jpg",
+      "t": 0,
+      "command": 0,
+      "translation": [
+        0,
+        1.1911681199166062,
+        0
+      ],
+      "sha256": "835c0125e8625b68a2fd68822ec7894f2cc6579c65ac5bc113db2fd2ea8ff759",
+      "stripeColumns": 952,
+      "truth": "validation-truth-000.f32.gz"
+    },
+    {
+      "file": "validation-017.jpg",
+      "t": 0.08900523560209424,
+      "command": 0,
+      "translation": [
+        0,
+        0.9753583212032306,
+        0
+      ],
+      "sha256": "4627ddedce63aa00b117590c2f2b9ec33bd10f1c6baf2d04731d5860eef8e2e4",
+      "stripeColumns": 963,
+      "truth": "validation-truth-017.f32.gz"
+    },
+    {
+      "file": "validation-035.jpg",
+      "t": 0.18324607329842932,
+      "command": 0,
+      "translation": [
+        0,
+        0.7468538284478927,
+        0
+      ],
+      "sha256": "a634c188abe9e1ee77e940949af7a8bed6e3465c3c4d4b055a48486fc0b37d06",
+      "stripeColumns": 975,
+      "truth": "validation-truth-035.f32.gz"
+    },
+    {
+      "file": "validation-052.jpg",
+      "t": 0.27225130890052357,
+      "command": 0,
+      "translation": [
+        0,
+        0.5310440297345171,
+        0
+      ],
+      "sha256": "6aedf50bd766ba742ff17c9585ee5cc64e8771dd8af9794f8186c40361720347",
+      "stripeColumns": 939,
+      "truth": "validation-truth-052.f32.gz"
+    },
+    {
+      "file": "validation-069.jpg",
+      "t": 0.3612565445026178,
+      "command": 0,
+      "translation": [
+        0,
+        0.31523423102114245,
+        0
+      ],
+      "sha256": "27fe6296ccef1f3fc16cb9106eddb142b7767cd15df26aa295136966a05844ae",
+      "stripeColumns": 823,
+      "truth": "validation-truth-069.f32.gz"
+    },
+    {
+      "file": "validation-087.jpg",
+      "t": 0.45549738219895286,
+      "command": 0,
+      "translation": [
+        0,
+        0.08672973826580366,
+        0
+      ],
+      "sha256": "96db3b2b530039a2c6db86223125cdb3be0b17dbb98585ae8d6ced6cf3116046",
+      "stripeColumns": 891,
+      "truth": "validation-truth-087.f32.gz"
+    },
+    {
+      "file": "validation-104.jpg",
+      "t": 0.5445026178010471,
+      "command": 0,
+      "translation": [
+        0,
+        -0.12908006044757148,
+        0
+      ],
+      "sha256": "4b922ca2a40c282ffa57e4e7c1dc860068af6359c9e72045a3f055a4c578d62d",
+      "stripeColumns": 1023,
+      "truth": "validation-truth-104.f32.gz"
+    },
+    {
+      "file": "validation-122.jpg",
+      "t": 0.6387434554973822,
+      "command": 0,
+      "translation": [
+        0,
+        -0.3575845532029098,
+        0
+      ],
+      "sha256": "e0dcef9610a0d98e40c7037cdf58a4e2c25c722f2ae4cc0e480c12ca2322a915",
+      "stripeColumns": 1041,
+      "truth": "validation-truth-122.f32.gz"
+    },
+    {
+      "file": "validation-139.jpg",
+      "t": 0.7277486910994765,
+      "command": 0,
+      "translation": [
+        0,
+        -0.573394351916285,
+        0
+      ],
+      "sha256": "d21ecea348d351b498f97affb1bbf355942f581a333bf0719dbedb8717983d19",
+      "stripeColumns": 1060,
+      "truth": "validation-truth-139.f32.gz"
+    },
+    {
+      "file": "validation-156.jpg",
+      "t": 0.8167539267015707,
+      "command": 0,
+      "translation": [
+        0,
+        -0.7892041506296601,
+        0
+      ],
+      "sha256": "378c8cafaeeafa0922467f48b3febfc0eabf09017c9e666901502aa2b98776f5",
+      "stripeColumns": 1072,
+      "truth": "validation-truth-156.f32.gz"
+    },
+    {
+      "file": "validation-174.jpg",
+      "t": 0.9109947643979057,
+      "command": 0,
+      "translation": [
+        0,
+        -1.017708643384999,
+        0
+      ],
+      "sha256": "e07c7961ffa59c15e01ec45cc4bab922ef3ae8c8467e3aca8faf255c5a1ae4de",
+      "stripeColumns": 1089,
+      "truth": "validation-truth-174.f32.gz"
+    },
+    {
+      "file": "validation-191.jpg",
+      "t": 1,
+      "command": 0,
+      "translation": [
+        0,
+        -1.233518442098374,
+        0
+      ],
+      "sha256": "0b1b26457d0a1a88c6645a46d74ddca178e8f2a4815182857db8485f6c5bfecd",
+      "stripeColumns": 1106,
+      "truth": "validation-truth-191.f32.gz"
+    }
+  ],
+  "lineCount": 12,
+  "scanMotion": "Rigid camera and laser head translate together on the vertical stage with a fixed baseline; the object stays stationary and each frame records the rig displacement (standalone demo: 12 of 192 rendered lines)",
+  "downloadFormat": "JPEG",
+  "downloadQuality": 96,
+  "objectDepth": [
+    3.9,
+    4.7
+  ],
+  "objectBox": [
+    -1.5,
+    1.5,
+    -1.7,
+    1.6,
+    3.9,
+    4.7
+  ]
+}

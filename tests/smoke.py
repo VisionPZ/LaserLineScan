@@ -12,6 +12,7 @@ demo dataset produces a real point cloud from a plain static server.
 Optional: LASER_SCAN_PORT picks the port (default: a free one).
 """
 import os
+import json
 import re
 import socket
 import subprocess
@@ -99,6 +100,14 @@ try:
         # Object scan at full speed.
         page.click("#ll-to-validation")
         page.wait_for_function("document.querySelector('#laser-lab').dataset.step==='3'", timeout=120000)
+        expect(page.locator("#ll-validate")).to_be_enabled(timeout=60000)
+        # The fixed-board subset has 40 bin frames but 24 for every other scene.
+        # Loading one scene must not overwrite the other cards with its count.
+        for card in page.locator("[data-validation-dataset]").all():
+            scene = card.get_attribute("data-validation-dataset")
+            manifest = json.loads((ROOT / "demo/validation/charuco-fixed-board" / scene / "manifest.json").read_text())
+            shown = int(re.search(r"\d+", card.locator("small").inner_text()).group())
+            assert shown == len(manifest["validation"]), f"{scene}: card shows {shown} lines"
         page.select_option("#ll-v-speed", "0")
         page.click("#ll-validate")
         page.wait_for_function("!document.querySelector('#laser-lab').classList.contains('is-running')", timeout=240000)

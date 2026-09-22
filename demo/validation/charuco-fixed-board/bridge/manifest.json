@@ -1,0 +1,443 @@
+{
+  "id": "fixed-board-bridge",
+  "split": "validation",
+  "version": "2.3.0",
+  "width": 1920,
+  "height": 1080,
+  "fx": 1665,
+  "fy": 1665,
+  "cx": 960,
+  "cy": 540,
+  "truth": {
+    "fx": 1480,
+    "fy": 1480,
+    "cx": 960,
+    "cy": 540
+  },
+  "unitMm": 100,
+  "direction": "top-down",
+  "scanTopology": "ordered-horizontal",
+  "provenance": "Original concrete surface with irregular fractured edges, a rough recessed floor and exposed aggregate meshes; backing removed below the scanned patch. The same geometry supplies acquisition depth and evaluation.",
+  "coordinateSystem": "Camera: X right, Y down, Z forward; mm",
+  "limitations": "Synthetic acquisition with a simulated brown lens [-0.18, 0.045, 0.001, -0.0015, -0.008]; approximate radiometry. Accuracy is evaluated against synthetic geometry, not physical measurements. The dark fracture uses a lower material-response factor in the source images (approximately 25–39% of intact concrete at the cavity floor). Weak returns can be missed at the default threshold. Laser radiometry is approximate, not a measured material BRDF.",
+  "lens": {
+    "model": "brown",
+    "coefficients": [
+      -0.18,
+      0.045,
+      0.001,
+      -0.0015,
+      -0.008
+    ]
+  },
+  "laserAppearance": "Blue stripe with a weaker, uneven return from dark fractured concrete inside the missing section",
+  "calibrationId": "charuco-fixed-board",
+  "rigId": "charuco-fixed-board",
+  "scene": "bridge",
+  "name": "Drone bridge survey",
+  "object": "Concrete deck with a spalled joint",
+  "acquisition": "fixed-board",
+  "validation": [
+    {
+      "file": "validation-000.jpg",
+      "t": 0,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "d4013d14523f981ffc80eb3ea9f911521004910cf15ee3cb3983865464d0d7e4",
+      "stripeColumns": 952,
+      "commandPosition": [
+        -0.09140640511470538,
+        0.44553695520335734
+      ]
+    },
+    {
+      "file": "validation-008.jpg",
+      "t": 0.041884816753926704,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "a0e58f720a23a932519ae01d05376c0ec656a3941a248ff5139a1985e697eff6",
+      "stripeColumns": 959,
+      "commandPosition": [
+        -0.0761822932668633,
+        0.32374406042062065
+      ]
+    },
+    {
+      "file": "validation-017.jpg",
+      "t": 0.08900523560209424,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "16114ee57eb8600dd0430b2bc645a0b40da216fb49cdd54ae8bbb3fa9879752a",
+      "stripeColumns": 965,
+      "commandPosition": [
+        -0.05905516743804094,
+        0.18672705379004184
+      ]
+    },
+    {
+      "file": "validation-025.jpg",
+      "t": 0.13089005235602094,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "ccce871afb8fd00177a19e3ce3ebd66aca71bd03149181e394eeaf1d68cb2bb7",
+      "stripeColumns": 972,
+      "commandPosition": [
+        -0.043831055590198856,
+        0.06493415900730515
+      ]
+    },
+    {
+      "file": "validation-033.jpg",
+      "t": 0.17277486910994763,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "de1ffa84f9cb8b3ef33f7c8fac2b481790423548ee0128a92e7e8cf2bd0d53dd",
+      "stripeColumns": 980,
+      "commandPosition": [
+        -0.02860694374235677,
+        -0.05685873577543155
+      ]
+    },
+    {
+      "file": "validation-042.jpg",
+      "t": 0.2198952879581152,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "91658049925917f4739ea8745dbaa8bd76913f118b8305ddbf918deede38511b",
+      "stripeColumns": 952,
+      "commandPosition": [
+        -0.011479817913534446,
+        -0.19387574240601016
+      ]
+    },
+    {
+      "file": "validation-050.jpg",
+      "t": 0.2617801047120419,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "410bd7fb0d00fdce7ad2241e364e4559576b89c567863fd6a3dbad4292ed50d4",
+      "stripeColumns": 874,
+      "commandPosition": [
+        0.0037442939343076687,
+        -0.31566863718874705
+      ]
+    },
+    {
+      "file": "validation-058.jpg",
+      "t": 0.3036649214659686,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "77ba366f70852eca12d4f937ae9b421de51e210492acc702f2f845a4bbd59d5d",
+      "stripeColumns": 834,
+      "commandPosition": [
+        0.018968405782149728,
+        -0.4374615319714835
+      ]
+    },
+    {
+      "file": "validation-066.jpg",
+      "t": 0.34554973821989526,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "1b6c0ee9af6e6283ea67fd93c8cdc626fe96517122cfc954fb9b247bde8565e2",
+      "stripeColumns": 811,
+      "commandPosition": [
+        0.034192517629991835,
+        -0.5592544267542204
+      ]
+    },
+    {
+      "file": "validation-075.jpg",
+      "t": 0.39267015706806285,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "e38bf9b4fdce9ca9df2cb6845053e178227747fa33b6c263a4ca0dc7829cef61",
+      "stripeColumns": 874,
+      "commandPosition": [
+        0.05131964345881416,
+        -0.696271433384799
+      ]
+    },
+    {
+      "file": "validation-083.jpg",
+      "t": 0.43455497382198954,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "b15282a7d8cb47d5a2e163bb971dc39e3dbc1156ecd0de56d1102f464fe2429f",
+      "stripeColumns": 861,
+      "commandPosition": [
+        0.06654375530665624,
+        -0.8180643281675356
+      ]
+    },
+    {
+      "file": "validation-091.jpg",
+      "t": 0.47643979057591623,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "c7d5dbc637fda96c5bd71bcae673a4e1cacd1b512bc23f0bb6159e6ecef48930",
+      "stripeColumns": 988,
+      "commandPosition": [
+        0.08176786715449835,
+        -0.9398572229502725
+      ]
+    },
+    {
+      "file": "validation-100.jpg",
+      "t": 0.5235602094240838,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "86539192c5fec59f149d4e6725f5818848f206d745e8e6071bfab5c902d2726a",
+      "stripeColumns": 1027,
+      "commandPosition": [
+        0.09889499298332072,
+        -1.0768742295808513
+      ]
+    },
+    {
+      "file": "validation-108.jpg",
+      "t": 0.5654450261780105,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "64cd28d2b04194bfd990c7dca498c3f4fbf6c9955f19d8f705617be8828b564b",
+      "stripeColumns": 1037,
+      "commandPosition": [
+        0.11411910483116278,
+        -1.1986671243635878
+      ]
+    },
+    {
+      "file": "validation-116.jpg",
+      "t": 0.6073298429319371,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "3e3ab989498910c276fe7cd5df4a16014b27400482883777e9da88d0e58c4271",
+      "stripeColumns": 1047,
+      "commandPosition": [
+        0.12934321667900484,
+        -1.3204600191463243
+      ]
+    },
+    {
+      "file": "validation-125.jpg",
+      "t": 0.6544502617801047,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "b38cc7b9b366fdd0f09d624602e31a704b1e146e622e3a8e85e0e2daf958ff51",
+      "stripeColumns": 1056,
+      "commandPosition": [
+        0.14647034250782723,
+        -1.4574770257769034
+      ]
+    },
+    {
+      "file": "validation-133.jpg",
+      "t": 0.6963350785340314,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "ef9e6880aef0071723426d822ebe356fde3828ca8fcbed2783c5ee68538eb137",
+      "stripeColumns": 1062,
+      "commandPosition": [
+        0.1616944543556693,
+        -1.5792699205596399
+      ]
+    },
+    {
+      "file": "validation-141.jpg",
+      "t": 0.7382198952879581,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "5d2c1e47ec534303818ed4ea34a41d5694795473ef9367f0cc5de578b30d4c23",
+      "stripeColumns": 1068,
+      "commandPosition": [
+        0.17691856620351143,
+        -1.701062815342377
+      ]
+    },
+    {
+      "file": "validation-149.jpg",
+      "t": 0.7801047120418848,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "8fc01f1113ba11bce5775c37b0b73238177fe32f3aa6484b95694ac87badbcdd",
+      "stripeColumns": 1072,
+      "commandPosition": [
+        0.1921426780513535,
+        -1.8228557101251135
+      ]
+    },
+    {
+      "file": "validation-158.jpg",
+      "t": 0.8272251308900523,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "4a820e87b7ad3f4c9b6fb8ac9c567113dc35415e119b0eb82c168851d0ad9e16",
+      "stripeColumns": 1079,
+      "commandPosition": [
+        0.2092698038801759,
+        -1.9598727167556929
+      ]
+    },
+    {
+      "file": "validation-166.jpg",
+      "t": 0.8691099476439791,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "48cdaf4816cceb9bd15bc7cbad22cb1338df1d9d4ad139c3c4170d9eef1b42fe",
+      "stripeColumns": 1086,
+      "commandPosition": [
+        0.22449391572801794,
+        -2.0816656115384293
+      ]
+    },
+    {
+      "file": "validation-174.jpg",
+      "t": 0.9109947643979057,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "51f687deae07db3566037c462a590c8b77f207e676e28eb3fb4cec2395afb35d",
+      "stripeColumns": 1092,
+      "commandPosition": [
+        0.23971802757586005,
+        -2.2034585063211662
+      ]
+    },
+    {
+      "file": "validation-183.jpg",
+      "t": 0.9581151832460733,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "14c26f32f0e7b6f9f9615c983dcf77e5a2fd25752de311119aff1afc80fb91e1",
+      "stripeColumns": 1099,
+      "commandPosition": [
+        0.25684515340468234,
+        -2.3404755129517447
+      ]
+    },
+    {
+      "file": "validation-191.jpg",
+      "t": 1,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "f69b85d948029db1db2bb8bbae2b768369eed9d20464012982ebafd0c894a8b6",
+      "stripeColumns": 1097,
+      "commandPosition": [
+        0.2720692652525244,
+        -2.462268407734481
+      ]
+    }
+  ],
+  "lineCount": 24,
+  "scanMotion": "Horizontal commands evaluated by the independently calibrated two-axis encoder map (standalone demo: 24 of 192 rendered lines)",
+  "validationTruth": "surface-depth.f32.gz",
+  "downloadFormat": "JPEG",
+  "downloadQuality": 96,
+  "objectDepth": [
+    3.9,
+    4.7
+  ],
+  "objectBox": [
+    -1.5,
+    1.5,
+    -1.1,
+    1.1,
+    3.9,
+    4.7
+  ]
+}

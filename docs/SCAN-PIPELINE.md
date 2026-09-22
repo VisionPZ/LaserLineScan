@@ -13,18 +13,21 @@ calibration it consumes is produced in [CALIBRATION.md](CALIBRATION.md); the
 manifests it reads are specified in [DATA-FORMATS.md](DATA-FORMATS.md); the
 result is drawn as described in [RENDERING.md](RENDERING.md).
 
+Performance figures quoted from the parent documentation describe earlier
+captures and settings; they are not fresh measurements of this packaged build.
+
 A validation job is only accepted if it names a split whose
 `calibrationId`/`rigId` match an existing calibration (`incompatible`
 otherwise), and the worker merges the scan's config over the calibration's own
 (`{...calibration.config, ...data.config}`).
 
-## 1. Pre-buffer, decode and display
+## 1. Prefetch, decode and display
 
-`bufferFrames` fetches every frame of the split into memory (eight parallel
-fetches) and reports `buffering` progress, so the scan never waits on the
-network. Decoding is kept off the critical path: `primeDecode` keeps three
-`createImageBitmap` decodes in flight, `takeDecoded` awaits the current one and
-immediately primes the next, and `OffscreenCanvas.drawImage` + `getImageData`
+`startFrames` queues downloads for the split and reports `buffering` progress
+as they finish. Processing starts without waiting for the whole split;
+browser connection scheduling controls transfer concurrency. `primeDecode`
+keeps up to three download-and-decode promises in flight, `takeDecoded` awaits
+the current one and primes the next, and `OffscreenCanvas.drawImage` + `getImageData`
 produce the RGBA pixels. After each frame the worker waits for the app's
 `frame-shown` acknowledgement, so processing cannot skip a frame the user never
 saw (`read()`).
@@ -61,7 +64,7 @@ from **106.9 ms → 43.6 ms** and a 192-frame scan from **20.5 s → 8.4 s**. Th
 remaining per-frame budget is balanced: decode ≈25%, transform ≈35%, scatter
 recovery ≈22% (`docs/LASER-CALIBRATION.md`, `dist/laser/_bench`).
 
-## 3. Blue-excess row scoring and the four estimators
+## 3. Colour scoring and the four estimators
 
 The kernel addresses the uploaded buffer with `configureImage(width, height,
 stride)`: stride 4 for the colour path, stride 1 for a monochrome frame. Its
@@ -69,20 +72,24 @@ score function (`score` in `oss.ts`) is:
 
 | Path | Score |
 | --- | --- |
-| colour, `mode 0` (default) | `max(0, B − max(R, G))` — the blue excess that cancels a neutral background |
+| colour with an optical design, `mode 2` | `max(0, w · RGB − level)` — projection onto the designed stripe colour, with an estimated background level removed |
+| colour without an optical design, `mode 0` | `max(0, B − max(R, G))` — blue excess |
 | colour, `mode 1` | the blue channel `B` |
 | monochrome (stride 1) | the pixel's own intensity |
 
-The colour path's blue excess is the default because it isolates the line from
-the ambient (`public/laser/DATASET-CARD.md`); the parent doc records that the
-monochrome path does not yet pay off because a colour-to-mono conversion cannot
-suppress the ambient.
+The current app supplies an optical design, so the worker uses mode 2 and
+sets `w` to the unit vector of the designed stripe colour. It approximates
+`level` from the median histogram bin of projected pixels sampled every
+fourth pixel. This adjusts the overall background level; it does not correct
+local illumination. Extraction and band verification use the same score
+plane. Without a spectral design the worker uses `config.channel` instead.
 
-The acceptance threshold is computed **over the whole sensor** before any band
-is applied (`stripeThreshold`): a 256-bin histogram of the score over the
-scanned columns, a `quantile` (default **0.98**) and a floor (default
-`threshold = 40` in `app.js`). The band changes *where* a peak is found, never
-*whether* it is accepted. A candidate must also clear a contrast test: its
+The acceptance threshold is sampled across **all rows and every other column
+of the horizontal ROI** before any row band is applied (`stripeThreshold`):
+a 256-bin histogram of integer-binned scores, a `quantile` (default **0.98**)
+and a floor (default `threshold = 40` in `app.js`). Narrowing the row band does
+not lower this threshold. Projection scores outside the histogram's supported
+range can currently abort extraction. A candidate must also clear a contrast test: its
 score must exceed the average of the rows three above and three below by at
 least `floor × 0.35`, which rejects broad highlights.
 
@@ -135,8 +142,8 @@ still tails the object residual into the stripe residual, so a lower threshold
 widens the span while a higher one starts missing stripe rows.
 
 The gate is a model of **one** score — the blue colour excess — so the worker
-loads it only for `config.channel === 0` and only for colour frames; any other
-colour metric or a monochrome frame falls back to the calibrated band alone. It
+loads it only for `config.channel === 0`, colour frames, and no spectral score.
+Mode 2 and monochrome frames use the calibrated band alone. It
 is deliberately **not** part of `searchBand`, so the drawn outline is a
 conservative superset of the rows the gate leaves.
 
@@ -149,26 +156,25 @@ halves that again to **8.8%**.
 For every frame the worker resolves the plane (`framePlane`) and builds the
 band with `searchBand(calibration, manifest, frame, config, plane)`
 ([CALIBRATION.md](CALIBRATION.md)), then calls `extractBanded`. The kernel
-computes the full-sensor threshold first and then, per column, the union of the
-band rows; outside the band it records the strongest raw score and its row
-(`verifyExcluded`, exposed through `excludedMaxPtr`/`excludedRowPtr`). Because
-every estimator accepts a candidate only when its raw score exceeds the
-band-independent threshold, a column whose excluded maximum is at or below the
-threshold **cannot** hide an accepted stripe centre — the banded result is then
-identical to a full-sensor result. The parent doc calls this a losslessness
-certificate, not a sample.
+computes the sampled, band-independent threshold first. `verifyExcluded`
+then checks excluded candidate rows in the selected columns and records each
+column's strongest **integer-binned** score and its row through
+`excludedMaxPtr`/`excludedRowPtr`. For integer scores, a maximum at or below
+the threshold rules out the intensity condition in those checked rows.
+Fractional projection scores can be truncated down to the threshold, so this
+check does not guarantee that every eligible mode-2 candidate was searched.
 
-`recoverBand` in the worker checks that certificate after the first extraction.
+`recoverBand` in the worker performs that check after the first extraction.
 A column that still hides a candidate is expanded to its offending row by
 `recoverMarginPx` (default **6**) and the frame is re-extracted, up to
 `verifyMaxPasses` (default **2**). If the budget is spent with candidates still
-outside, the scan is reported **unqualified** instead of silently exporting
-plausible geometry. `verifyBand: false` restores the plain band;
+outside, the scan is reported **unqualified**; the app still permits
+reconstruction and export. `verifyBand: false` restores the plain band;
 `bandMode: 'fixed'` restores the fixed-margin band. The result metrics carry
 `verified`, `verifiedFrames`, `outOfBandRate` (expanded columns / searched
 columns), `fallbackFrames` and `unqualifiedFrames`; `outOfBandRate` is also the
-drift signal, because a rate that climbs across scans means the camera–laser
-geometry moved.
+diagnostic signal: a rising rate can have several causes, including changes
+in camera–laser geometry or the scene. It is not a geometry-accuracy guarantee.
 
 Measured on the published sample: of true stripe pixels (blue excess > 64) the
 unverified fixed band excludes 18 and the unverified uncertainty band 40, while
@@ -192,8 +198,9 @@ trustworthy:
   `minAmplitude × peak` (default 0.15).
 - **Continuity gate.** The recovered row must lie within `recoverContinuityPx`
   (default 4) of the linear trend of the already-measured columns, and the
-  nearest measured column must be within `recoverGapPx` (default 8), so a
-  genuinely missing (occluded) column is left alone.
+  nearest measured column must be within `recoverGapPx` (default 8). This
+  limits unsupported gap filling but does not identify whether a gap is an
+  occlusion.
 - **S2 shoulder recovery.** A column whose core is at the sensor ceiling is
   centred from the unsaturated shoulders (`shoulderCenter`, a log-parabola fit
   of samples below `saturation = 250`), used when at least two profile samples
@@ -203,6 +210,11 @@ The worker runs recovery after band verification and the row gate when
 `config.recoverMissing !== false` (default on), merges the recovered
 `{x, y, amplitude}` points into the stripe array and accumulates
 `recoveredColumns`. The viewer carries `data-recovered` for the browser check.
+Recovery uses the fixed intensity floor and its own continuity and amplitude
+tests, not the main detector's adaptive threshold and ridge acceptance test.
+Its colour profile remains blue excess: it does not receive the designed
+projection direction or background level, so green and red support in the
+main detector does not extend to recovery.
 
 Measured on the water bottles (`tests/laser/bottles.py`, moving board, 192
 frames, parent doc): coverage **0.734 → 0.871**, points **91,444 → 108,588**
@@ -234,13 +246,21 @@ positions.
 
 ## 8. Truth, coverage and error metrics
 
-Evaluation truth is fetched **only after every displayed point exists**
-(`worker.js`; the parent doc stresses this ordering). Each validation frame
-either carries a per-frame `truth` volume or the split shares one
-`validationTruth`; both are 1920 × 1080 `Float32` depth arrays. `sample()`
+The worker loads a shared `validationTruth` map before scanning, or prefetches
+per-frame `truth` maps through a bounded lookahead (eight by default). It
+reconstructs each frame's points before scoring them against that map. The
+packaged moving rig uses per-frame maps; the packaged fixed rig shares one
+map per scene. Quantised uint16 or float32 storage is decoded into
+`width × height` float32 depth arrays, as specified in
+[DATA-FORMATS.md](DATA-FORMATS.md). `sample()`
 bilinearly samples the truth with a discontinuity guard: if any of the four
 neighbour cells is zero or the cell span exceeds 0.035 model units (3.5 mm),
 the sample is unscored.
+
+Reference samples do not determine the triangulated coordinates. Supplied
+object-depth and object-column bounds still constrain the search, and the
+optional row gate is trained from capture data. The completed cloud reaches
+the result viewer only after the scan finishes.
 
 For each observation the worker computes the depth from the truth (at the
 observation's true-pixel coordinates `su`, `sv`), maps it back to the object
@@ -258,7 +278,7 @@ millimetres. The result metrics (`worker.js`, `metrics` object) are:
 | `stripeRoi` | the working depth interval used |
 | `scanFraction` | `scannedRows / (width × height)` |
 | `bandMode` / `bandSigmaK` | `fixed` or `uncertainty`, and the k used |
-| `verified` / `verifiedFrames` | whether the losslessness certificate held for every verified frame |
+| `verified` / `verifiedFrames` | whether all checked frames passed the integer-binned excluded-score check, and how many frames were checked |
 | `recoveredColumns` | scatter/S2 points added |
 | `outOfBandRate` | expanded columns / searched columns |
 | `fallbackFrames` / `unqualifiedFrames` | frames that needed recovery / could not certify |

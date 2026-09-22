@@ -1,0 +1,215 @@
+{
+  "id": "moving-board-bottles",
+  "split": "validation",
+  "version": "2.1.2",
+  "width": 1920,
+  "height": 1080,
+  "fx": 1665,
+  "fy": 1665,
+  "cx": 960,
+  "cy": 540,
+  "truth": {
+    "fx": 1480,
+    "fy": 1480,
+    "cx": 960,
+    "cy": 540
+  },
+  "unitMm": 100,
+  "direction": "top-down",
+  "scanTopology": "ordered-horizontal",
+  "provenance": "Native 1920x1080 Cycles renders, original meshes and materials, geometry-driven laser response; no source photos or image enlargement.",
+  "coordinateSystem": "Camera: X right, Y down, Z forward; mm",
+  "limitations": "Synthetic acquisition with a simulated brown lens [-0.18, 0.045, 0.001, -0.0015, -0.008]; approximate radiometry. Accuracy is evaluated against synthetic geometry, not physical measurements. Bottles include approximate liquid-volume scattering in the actual processing images. Refraction is rendered in the base appearance but laser light transport and the triangulation solver do not trace refracted rays. Reconstruction estimates the outer front surface, not the liquid interior. Errors arise from image detection, not added point noise.",
+  "lens": {
+    "model": "brown",
+    "coefficients": [
+      -0.18,
+      0.045,
+      0.001,
+      -0.0015,
+      -0.008
+    ]
+  },
+  "laserAppearance": "Soft blue stripe with transient liquid glow above and below it; unequal brightness follows laser incidence on the curved bottle surface",
+  "scatteringModel": "Approximate depth-attenuated volume integration plus two-sided diffuse spread weighted by emitter-to-surface incidence and local surface tangents; 24 integration samples; 1.6 mm sheet and 4.3 mm volume diffuse widths; no temporal persistence",
+  "calibrationId": "charuco-moving-board",
+  "rigId": "charuco-moving-board",
+  "scene": "bottles",
+  "name": "Water bottles",
+  "object": "Translucent bottles filled with water",
+  "acquisition": "moving-board",
+  "validation": [
+    {
+      "file": "validation-000.jpg",
+      "t": 0,
+      "command": 0,
+      "translation": [
+        0,
+        1.0078910186189307,
+        0
+      ],
+      "sha256": "be9827251a442143f9d282c17fb3264a933c2df00ddf1f163944bb18837085a2",
+      "stripeColumns": 327,
+      "truth": "validation-truth-000.f32.gz"
+    },
+    {
+      "file": "validation-017.jpg",
+      "t": 0.08900523560209424,
+      "command": 0,
+      "translation": [
+        0,
+        0.7974038528220153,
+        0
+      ],
+      "sha256": "32dfd5f4517880cc9fb7e3cef6ade36ead7a910bfbae50e89fb1f31221fa7fd2",
+      "stripeColumns": 308,
+      "truth": "validation-truth-017.f32.gz"
+    },
+    {
+      "file": "validation-035.jpg",
+      "t": 0.18324607329842932,
+      "command": 0,
+      "translation": [
+        0,
+        0.5745350890370466,
+        0
+      ],
+      "sha256": "957abb017f95e81e94bd75cbf541e2d3d65ba3ad420c354a450517a7d68298c9",
+      "stripeColumns": 569,
+      "truth": "validation-truth-035.f32.gz"
+    },
+    {
+      "file": "validation-052.jpg",
+      "t": 0.27225130890052357,
+      "command": 0,
+      "translation": [
+        0,
+        0.36404792324013124,
+        0
+      ],
+      "sha256": "4aaa731dac518450a621dd6dff213b9b4df4731a40e212106a23b70580730b35",
+      "stripeColumns": 681,
+      "truth": "validation-truth-052.f32.gz"
+    },
+    {
+      "file": "validation-069.jpg",
+      "t": 0.3612565445026178,
+      "command": 0,
+      "translation": [
+        0,
+        0.1535607574432163,
+        0
+      ],
+      "sha256": "b8efba91b8055e6c009784df9e2c005535d6c33330b801dce4500983d259ae78",
+      "stripeColumns": 706,
+      "truth": "validation-truth-069.f32.gz"
+    },
+    {
+      "file": "validation-087.jpg",
+      "t": 0.45549738219895286,
+      "command": 0,
+      "translation": [
+        0,
+        -0.06930800634175283,
+        0
+      ],
+      "sha256": "6233590c4549ae80a24ff84c91b818a2effb456d21c5b207ee0763851de88eed",
+      "stripeColumns": 717,
+      "truth": "validation-truth-087.f32.gz"
+    },
+    {
+      "file": "validation-104.jpg",
+      "t": 0.5445026178010471,
+      "command": 0,
+      "translation": [
+        0,
+        -0.2797951721386682,
+        0
+      ],
+      "sha256": "a4c273d3efd9de231dff1795d46d6afda64ff4b06489aa5e7b66d801680e4dd0",
+      "stripeColumns": 731,
+      "truth": "validation-truth-104.f32.gz"
+    },
+    {
+      "file": "validation-122.jpg",
+      "t": 0.6387434554973822,
+      "command": 0,
+      "translation": [
+        0,
+        -0.5026639359236369,
+        0
+      ],
+      "sha256": "0a0f9b4217a0d7bd907a18ae31457c8a9bcc021618b6382f22cf4b77417443a9",
+      "stripeColumns": 739,
+      "truth": "validation-truth-122.f32.gz"
+    },
+    {
+      "file": "validation-139.jpg",
+      "t": 0.7277486910994765,
+      "command": 0,
+      "translation": [
+        0,
+        -0.7131511017205523,
+        0
+      ],
+      "sha256": "ca31b833ff9b6d6c1e48b55a40a9f7156c0a53f460098ecb72f9256c281c80e2",
+      "stripeColumns": 749,
+      "truth": "validation-truth-139.f32.gz"
+    },
+    {
+      "file": "validation-156.jpg",
+      "t": 0.8167539267015707,
+      "command": 0,
+      "translation": [
+        0,
+        -0.9236382675174677,
+        0
+      ],
+      "sha256": "9fec429c54423b9d571fdc81b28ee3b3179e2156e0831401be62a541391561a0",
+      "stripeColumns": 758,
+      "truth": "validation-truth-156.f32.gz"
+    },
+    {
+      "file": "validation-174.jpg",
+      "t": 0.9109947643979057,
+      "command": 0,
+      "translation": [
+        0,
+        -1.1465070313024364,
+        0
+      ],
+      "sha256": "dd645acef346991df041f90073fa4a71d65a8484d200f06c54a1e9beb0661547",
+      "stripeColumns": 764,
+      "truth": "validation-truth-174.f32.gz"
+    },
+    {
+      "file": "validation-191.jpg",
+      "t": 1,
+      "command": 0,
+      "translation": [
+        0,
+        -1.356994197099352,
+        0
+      ],
+      "sha256": "0b85d7928c7cc9c26f7a17311bc99416b432aa44bfeab2206ae3750ab8fb15f0",
+      "stripeColumns": 613,
+      "truth": "validation-truth-191.f32.gz"
+    }
+  ],
+  "lineCount": 12,
+  "scanMotion": "Rigid camera and laser head translate together on the vertical stage with a fixed baseline; the object stays stationary and each frame records the rig displacement (standalone demo: 12 of 192 rendered lines)",
+  "downloadFormat": "JPEG",
+  "downloadQuality": 96,
+  "objectDepth": [
+    3.4,
+    4.4
+  ],
+  "objectBox": [
+    -1.4,
+    1.3,
+    -1.6,
+    1.5,
+    3.4,
+    4.4
+  ]
+}

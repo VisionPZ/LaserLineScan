@@ -9,24 +9,28 @@ browser-first, and the contribution process is meant to stay that way.
 
 ## Developer setup
 
-You need **Node.js 20 or newer**. There is nothing to install:
+You need **Node.js 20 or newer** and **Git LFS**. Git LFS downloads the capture
+images, reference depth, and compiled kernel from the public repository. Serving
+the demo and running the Node tests require no npm dependency installation:
 
 ```sh
-git clone https://github.com/VisionPZ/LaserLineScan.git
+git lfs install
+git clone https://github.com/VisionPZ/LaserLineScan.git laser-line-scan
 cd laser-line-scan
+git lfs pull
 node serve.mjs        # http://localhost:8080
 npm test              # the Node test suite
 ```
 
 The runtime is plain ES modules with no bundler and no framework, so a normal
 contribution needs no build step. The compiled kernel `runtime/core.wasm` is
-checked in. It is compiled from the AssemblyScript source
-`assembly/laser/oss.ts` (in the upstream Nidvue source tree); if you change the
-kernel, rebuild the wasm with:
+checked in. Its AssemblyScript source is included at `kernel/oss.ts` (mirrored
+from `assembly/laser/oss.ts` in the upstream Nidvue source tree). After changing
+the kernel, install the pinned compiler and rebuild the wasm with:
 
 ```sh
-npx --yes assemblyscript@0.28.20 asc assembly/laser/oss.ts \
-  --outFile runtime/core.wasm --optimize --runtime stub --exportRuntime
+npm install
+npm run build:kernel
 ```
 
 The browser probe additionally needs Python, Playwright and Chromium — see

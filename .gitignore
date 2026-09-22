@@ -30,3 +30,6 @@ validation-datasets/
 .venv/
 __pycache__/
 *.pyc
+
+# Local Nix evaluation caches are not release artifacts.
+.cache/

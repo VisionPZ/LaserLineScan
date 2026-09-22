@@ -7,16 +7,19 @@
  * The website renders its laser page from content/laser-copy.json plus
  * tools/laser/page.html. This script reproduces that fill-in for English only,
  * then rewrites the asset roots for the standalone tree (`runtime/` for code
- * and styles, `demo/` for the small rendered dataset), drops the dataset ZIP
- * download links (the demo does not ship those archives) and corrects the
- * static frame counts to the demo manifests.
+ * and styles, `demo/` for the rendered dataset), drops the dataset ZIP download
+ * links (no build ships those archives) and sets the static frame counts from
+ * the manifests of whichever dataset tree this run is pointed at — so the
+ * deployed copy can state the whole capture sequence while the package states
+ * its own small subset, without a constant in either.
  *
  * `index.html` is committed, so a cloned copy needs no build step; run this
  * script from the upstream website checkout when the copy or template changes.
  *
  *   node tools/build-index.mjs
+ *   DEMO_OUT=/path/to/index.html DEMO_COUNTS_DIR=/path/to/hd node tools/build-index.mjs
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -32,9 +35,25 @@ const escape = (s) => s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replace
 const strings = Object.fromEntries(Object.entries(copy).map(([key, values]) => [key, values[0]]));
 
 const calibrationIds = ['charuco-moving-board', 'charuco-fixed-board'];
-// The demo ships the `bin` validation scene only, so the markup offers only the
-// choices whose frames and preview actually exist in this repository.
-const sceneIds = ['bin'];
+// Every scene the demo ships gets a card: its frames and preview exist in this
+// repository (see tools/make-demo-dataset.mjs), and the line count below is the
+// number the demo actually carries, not the size of the full capture tree.
+const sceneIds = ['bin', 'bottles', 'bridge', 'rail', 'plush'];
+// Counts come from the manifests, never from constants: the package states its
+// own small subset, the deployed copy states the whole capture sequence.
+const countsRoot = process.env.DEMO_COUNTS_DIR ? resolve(process.env.DEMO_COUNTS_DIR) : join(packageRoot, 'demo');
+const readCount = (file, key) => {
+  const path = join(countsRoot, file);
+  if (!existsSync(path)) throw new Error(`missing manifest for the page counts: ${path}`);
+  return JSON.parse(readFileSync(path, 'utf8'))[key].length;
+};
+const demoFrames = {
+  calibration: Object.fromEntries(calibrationIds.map((rig) => [rig,
+    readCount(`calibration/${rig}/manifest.json`, 'calibration')])),
+  validation: Object.fromEntries(calibrationIds.map((rig) => [rig,
+    Object.fromEntries(sceneIds.map((scene) => [scene,
+      readCount(`validation/${rig}/${scene}/manifest.json`, 'validation')]))])),
+};
 const cards = (split) => (split === 'calibration' ? calibrationIds : sceneIds).map((id, n) => {
   const calibration = split === 'calibration';
   const path = calibration ? `demo/calibration/${id}` : `demo/validation/charuco-moving-board/${id}`;
@@ -42,7 +61,12 @@ const cards = (split) => (split === 'calibration' ? calibrationIds : sceneIds).m
   const description = calibration
     ? strings[id === 'charuco-fixed-board' ? 'fixedReference' : 'movingReference']
     : strings[`${id}Object`];
-  return `<button class="ll-dataset${n ? '' : ' is-selected'}" ${calibration ? 'data-dataset' : 'data-validation-dataset'}="${id}" aria-pressed="${!n}" type="button"><div class="ll-card-image"><img src="${path}/preview.webp" width="1920" height="1080" alt="${escape(description)}" loading="lazy"><span>0${n + 1}</span></div><div class="ll-card-copy"><strong>${escape(title)}</strong><span>${escape(description)}</span><small>${calibration ? '50' : '192'} ${escape(strings[`${split}Frames`])}</small></div><span class="ll-card-check" aria-hidden="true">✓</span></button>`;
+  const count = calibration ? demoFrames.calibration[id] : demoFrames.validation['charuco-moving-board'][id];
+  // The fixed-rig demo has 40 bin frames but 24 frames for other scenes. Keep
+  // each rig's actual count on the card so switching rigs preserves that distinction.
+  const countAttributes = calibration ? '' : calibrationIds
+    .map((rig) => ` data-count-${rig}="${demoFrames.validation[rig][id]}"`).join('');
+  return `<button class="ll-dataset${n ? '' : ' is-selected'}" ${calibration ? 'data-dataset' : 'data-validation-dataset'}="${id}"${countAttributes} aria-pressed="${!n}" type="button"><div class="ll-card-image"><img src="${path}/preview.webp" width="1920" height="1080" alt="${escape(description)}" loading="lazy"><span>0${n + 1}</span></div><div class="ll-card-copy"><strong>${escape(title)}</strong><span>${escape(description)}</span><small>${escape(String(count))} ${escape(strings[`${split}Frames`])}</small></div><span class="ll-card-check" aria-hidden="true">✓</span></button>`;
 }).join('');
 
 const imageTools = (split) => `<button type="button" data-image-action="out" title="${escape(strings.zoomOut)}" aria-label="${escape(strings.zoomOut)}">−</button><output>100%</output><button type="button" data-image-action="in" title="${escape(strings.zoomIn)}" aria-label="${escape(strings.zoomIn)}">+</button><button type="button" data-image-action="left" title="${escape(strings.rotateLeft)}" aria-label="${escape(strings.rotateLeft)}">↶</button><button type="button" data-image-action="right" title="${escape(strings.rotateRight)}" aria-label="${escape(strings.rotateRight)}">↷</button><button type="button" data-image-action="reset" title="${escape(strings.homeView)}" aria-label="${escape(strings.homeView)}">⟲</button><label class="ll-box-toggle"><input type="checkbox" data-image-action="roi" title="${escape(strings.roiOverlay)}">${escape(strings.dynamicRoi)}</label>`;
@@ -58,7 +82,9 @@ let fragment = template
   .replaceAll('__LOCALE__', 'en')
   .replaceAll('__LASER_ASSET__hd/', 'demo/')
   .replaceAll('__LASER_ASSET__', 'runtime/')
-  .replaceAll('__PORTFOLIO__', '#')
+  .replaceAll('__PORTFOLIO__', 'https://www.nidvue.com/portfolio/')
+  .replaceAll('__ARTICLE__', 'https://www.nidvue.com/articles/laser-line-scan-defect-inspection/')
+  .replaceAll('__SOURCE__', 'https://github.com/VisionPZ/LaserLineScan')
   .replace(/\{\{(\w+)\}\}/g, (_, key) => {
     if (!strings[key]) throw new Error(`Unknown token ${key}`);
     return escape(strings[key]);
@@ -70,28 +96,34 @@ let fragment = template
 fragment = fragment.replace(/<div class="ll-downloads">.*?<\/div>/g, '');
 // Card previews and frame images resolve against the packaged demo directory.
 
-// Static frame counts must match the demo manifests: 12 calibration poses and
-// 12 validation lines. The runtime overwrites most of these once a manifest is
-// loaded; the initial document still has to be honest before that happens.
+// The template states the capture tree's counts (50 poses, 192 lines); rewrite
+// them to whatever this build actually ships. The runtime overwrites these once
+// a manifest loads, but the initial document still has to be honest.
+const poses = demoFrames.calibration['charuco-moving-board'];
+const lines = demoFrames.validation['charuco-moving-board'].bin;
 const counts = [
-  ['id="ll-frame-badge">001 / 50<', 'id="ll-frame-badge">001 / 12<'],
-  ['id="ll-frame" type="range" min="0" max="49"', 'id="ll-frame" type="range" min="0" max="11"'],
-  ['id="ll-frame-output" for="ll-frame">001 / 50<', 'id="ll-frame-output" for="ll-frame">001 / 12<'],
-  ['id="ll-count">0 / 50<', 'id="ll-count">0 / 12<'],
-  ['id="ll-progress" value="0" max="50"', 'id="ll-progress" value="0" max="12"'],
-  ['id="ll-calibrated-count">50<', 'id="ll-calibrated-count">12<'],
-  ['id="ll-v-frame-badge">001 / 192<', 'id="ll-v-frame-badge">001 / 12<'],
-  ['id="ll-v-frame" type="range" min="0" max="191"', 'id="ll-v-frame" type="range" min="0" max="11"'],
-  ['id="ll-v-frame-output" for="ll-v-frame">001 / 192<', 'id="ll-v-frame-output" for="ll-v-frame">001 / 12<'],
-  ['id="ll-line-count">192<', 'id="ll-line-count">12<'],
-  ['id="ll-lines">192<', 'id="ll-lines">12<'],
-  ['id="ll-v-progress" value="0" max="192"', 'id="ll-v-progress" value="0" max="12"'],
-  ['<small>50 ', '<small>12 '],
-  ['<small>192 ', '<small>12 '],
+  ['id="ll-frame-badge">001 / 50<', `id="ll-frame-badge">001 / ${poses}<`],
+  ['id="ll-frame" type="range" min="0" max="49"', `id="ll-frame" type="range" min="0" max="${poses - 1}"`],
+  ['id="ll-frame-output" for="ll-frame">001 / 50<', `id="ll-frame-output" for="ll-frame">001 / ${poses}<`],
+  ['id="ll-count">0 / 50<', `id="ll-count">0 / ${poses}<`],
+  ['id="ll-progress" value="0" max="50"', `id="ll-progress" value="0" max="${poses}"`],
+  ['id="ll-calibrated-count">50<', `id="ll-calibrated-count">${poses}<`],
+  ['id="ll-v-frame-badge">001 / 192<', `id="ll-v-frame-badge">001 / ${lines}<`],
+  ['id="ll-v-frame" type="range" min="0" max="191"', `id="ll-v-frame" type="range" min="0" max="${lines - 1}"`],
+  ['id="ll-v-frame-output" for="ll-v-frame">001 / 192<', `id="ll-v-frame-output" for="ll-v-frame">001 / ${lines}<`],
+  ['id="ll-line-count">192<', `id="ll-line-count">${lines}<`],
+  ['id="ll-lines">192<', `id="ll-lines">${lines}<`],
+  ['id="ll-v-progress" value="0" max="192"', `id="ll-v-progress" value="0" max="${lines}"`],
 ];
 for (const [from, to] of counts) {
   if (!fragment.includes(from)) throw new Error(`Expected markup not found: ${from}`);
   fragment = fragment.replaceAll(from, to);
+}
+// The cards carry the demo's own line counts, so they are asserted rather than
+// patched: every count comes from the packaged manifests.
+for (const [id, lines] of [...calibrationIds.map((rig) => [rig, demoFrames.calibration[rig]]), ...sceneIds.map((s) => [s, demoFrames.validation['charuco-moving-board'][s]])]) {
+  const want = `<small>${String(lines)} `;
+  if (!fragment.includes(want)) throw new Error(`Card line count missing for ${id}: ${want}`);
 }
 
 // The stylesheet link is hoisted into <head>; the tokens below are the same
@@ -138,6 +170,9 @@ const html = `<!--
 <link rel="icon" type="image/svg+xml" href="runtime/mascots/nidvue-84-scan.svg">
 <title>laser-line-scan · ${escape(strings.title)}</title>
 <meta name="description" content="${escape(strings.lead)}">
+<!-- The project's one address: the apex host serves the same bytes, so it
+     canonicalises here rather than competing with it. -->
+<link rel="canonical" href="https://www.nidvue.com/laser-line-scan/">
 <style>${tokens}</style>
 <link rel="stylesheet" href="runtime/lab.css">
 </head>
@@ -149,5 +184,6 @@ ${fragment}</main>
 </html>
 `;
 
-writeFileSync(join(packageRoot, 'index.html'), html);
-console.log(`Wrote index.html (${html.length} bytes)`);
+const outPath = process.env.DEMO_OUT ? resolve(process.env.DEMO_OUT) : join(packageRoot, 'index.html');
+writeFileSync(outPath, html);
+console.log(`Wrote ${outPath} (${html.length} bytes)`);

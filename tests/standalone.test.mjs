@@ -56,10 +56,13 @@ test('index.html references only shipped assets and the demo frame counts', () =
     assert.ok(existsSync(join(packageRoot, value)), `index.html references missing asset ${value}`);
   }
   // The prebuilt document must not point back at the website's multi-gigabyte
-  // capture tree, and its static counts must be the 12-frame demo default.
+  // capture tree, and its static counts must match what the packaged demo
+  // actually carries (50 calibration poses, 12 lines for the dense scene).
   assert.ok(/<img[^>]*id="ll-frame-image"[^>]*src="demo\//.test(html), 'frame images resolve to the packaged demo, not a deferred marker');
-  assert.ok(html.includes('id="ll-frame-badge">001 / 12<'), 'static calibration badge is not 12');
-  assert.ok(html.includes('id="ll-v-frame-badge">001 / 12<'), 'static validation badge is not 12');
+  const poses = JSON.parse(readFileSync(join(packageRoot, 'demo/calibration/charuco-moving-board/manifest.json'), 'utf8')).calibration.length;
+  const lines = JSON.parse(readFileSync(join(packageRoot, 'demo/validation/charuco-moving-board/bin/manifest.json'), 'utf8')).validation.length;
+  assert.ok(html.includes(`id="ll-frame-badge">001 / ${poses}<`), `static calibration badge is not ${poses}`);
+  assert.ok(html.includes(`id="ll-v-frame-badge">001 / ${lines}<`), `static validation badge is not ${lines}`);
   assert.ok(!html.includes('ll-download'), 'index.html still offers dataset ZIP downloads');
 });
 

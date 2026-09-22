@@ -12,10 +12,17 @@
  *
  * Layout produced (mirrors the runtime's `demo/<split>/<rig>/<scene>/` paths):
  *
- *   demo/calibration/charuco-moving-board/   12 frames + preview + manifest
- *   demo/calibration/charuco-fixed-board/    12 frames + preview + manifest
- *   demo/validation/charuco-moving-board/bin/ 12 frames + 12 truth volumes
- *   demo/validation/charuco-fixed-board/bin/  40 frames + 1 shared truth volume
+ *   demo/calibration/charuco-moving-board/   50 frames + preview + manifest
+ *   demo/calibration/charuco-fixed-board/    50 frames + preview + manifest
+ *   demo/validation/<rig>/bin/               12 (moving) / 40 (fixed) frames
+ *   demo/validation/charuco-moving-board/<scene>/ 12 frames + 12 truth volumes
+ *   demo/validation/charuco-fixed-board/<scene>/  24 frames + 1 shared truth
+ *
+ * Every scene the lab can offer ships with the demo, because a card that
+ * cannot be scanned is worse than no card at all. The extra scenes carry fewer
+ * lines than `bin`: the moving rig stores one truth volume per line (~0.35 MiB quantised
+ * each, and the volume only describes the camera pose of that line, so it
+ * cannot be shared), which is what keeps the whole demo near 100 MiB.
  *
  * The fixed-board validation split carries more frames: the kernel returns at
  * most one stripe point per image column, so 12 frames of a 1920 px image can
@@ -28,14 +35,42 @@
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gunzipSync, gzipSync } from 'node:zlib';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const packageRoot = resolve(here, '..');
 const repoRoot = resolve(here, '../../..');
 const sourceRoot = join(repoRoot, 'public/laser/hd');
-const outputRoot = join(packageRoot, 'demo');
-const frameCount = Number(process.env.DEMO_FRAMES || 12);
-const validationFrameCount = Number(process.env.DEMO_VALIDATION_FRAMES || 40);
+/** `DEMO_OUT` lets the website build generate straight into dist/laser/hd. */
+const outputRoot = process.env.DEMO_OUT ? resolve(process.env.DEMO_OUT) : join(packageRoot, 'demo');
+/** A frame count of `all` packages the whole rendered sequence. */
+const count = (value, fallback) =>
+  value === 'all' ? Number.MAX_SAFE_INTEGER : Number(value || fallback);
+const calibrationFrameCount = count(process.env.DEMO_CALIBRATION_FRAMES, 50);
+const validationFrameCount = count(process.env.DEMO_VALIDATION_FRAMES, 40);
+const movingSceneFrameCount = count(process.env.DEMO_MOVING_SCENE_FRAMES, 12);
+const fixedSceneFrameCount = count(process.env.DEMO_FIXED_SCENE_FRAMES, 24);
+/** Scenes offered by the scan step; `bin` ships the full-size demo set. */
+const sceneIds = ['bin', 'bottles', 'bridge', 'rail', 'plush'];
+/** Truth volumes ship quantised: the scan keeps z in [1,8] units and 0 means
+ *  "no data", so a uint16 count holds 8.5 units with a 0.13 mm quantum — far
+ *  below the ~0.25 mm shape error the scan reports, at a third of the bytes. */
+const TRUTH_SCALE = 8.5 / 65534;
+const TRUTH_ENCODING = { type: 'u16', scale: TRUTH_SCALE };
+/** Write a gzipped float32 depth volume as gzipped uint16; returns the new name. */
+function quantiseTruth(sourceRoot, destRoot, name) {
+  const raw = gunzipSync(readFileSync(join(sourceRoot, name)));
+  const values = new Float32Array(raw.buffer, raw.byteOffset, raw.byteLength / 4);
+  const counts = new Uint16Array(values.length);
+  for (let i = 0; i < values.length; i++) {
+    const v = values[i];
+    counts[i] = v > 0 ? Math.max(1, Math.min(65535, Math.round(v / TRUTH_SCALE))) : 0;
+  }
+  const out = name.replace(/\.f32\.gz$/, '.u16.gz');
+  mkdirSync(destRoot, { recursive: true });
+  writeFileSync(join(destRoot, out), gzipSync(Buffer.from(counts.buffer, counts.byteOffset, counts.byteLength), { level: 6 }));
+  return out;
+}
 
 /** Evenly spaced indices over `total`, always including the first frame. */
 function pickEven(total, count) {
@@ -76,13 +111,17 @@ function rewriteValidation(manifest, selected, original) {
   delete manifest.downloadBytes;
 }
 
-/** Copy one calibration split: 12 frames, its preview and a trimmed manifest. */
+/** Copy one calibration split: the full pose set, its preview and a trimmed manifest.
+ *
+ * Calibration ships every rendered pose (50): the fit is the product's core, and
+ * a dozen poses noticeably change the residual the page reports.
+ */
 function buildCalibration(rig) {
   const source = join(sourceRoot, 'calibration', rig);
   const dest = join(outputRoot, 'calibration', rig);
   const manifest = JSON.parse(readFileSync(join(source, 'manifest.json'), 'utf8'));
   const total = manifest.calibration.length;
-  const indices = pickEven(total, frameCount);
+  const indices = pickEven(total, calibrationFrameCount);
   const selected = indices.map((i) => manifest.calibration[i]);
   for (const frame of selected) {
     requireFile(join(source, frame.file));
@@ -123,17 +162,18 @@ function buildValidation(rig, scene, count = validationFrameCount) {
     copy(join(source, frame.file), join(dest, frame.file));
   }
   copy(join(source, 'preview.webp'), join(dest, 'preview.webp'));
-  // A shared validation truth volume is copied once; per-frame volumes travel
-  // with the frames that reference them, so no manifest promises an absent file.
+  // Truth volumes ship quantised to uint16; every reference in the packaged
+  // manifest is rewritten to the file that actually travelled.
   if (manifest.validationTruth) {
     requireFile(join(source, manifest.validationTruth));
-    copy(join(source, manifest.validationTruth), join(dest, manifest.validationTruth));
+    manifest.validationTruth = quantiseTruth(source, dest, manifest.validationTruth);
   }
   for (const frame of selected) {
     if (!frame.truth) continue;
     requireFile(join(source, frame.truth));
-    copy(join(source, frame.truth), join(dest, frame.truth));
+    frame.truth = quantiseTruth(source, dest, frame.truth);
   }
+  manifest.truthEncoding = TRUTH_ENCODING;
   rewriteValidation(manifest, selected, total);
   writeFileSync(join(dest, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   return { rig, scene, frames: selected.length, total, truth: manifest.validationTruth ? 'shared' : 'per-frame' };
@@ -162,8 +202,10 @@ mkdirSync(outputRoot, { recursive: true });
 const results = [
   buildCalibration('charuco-moving-board'),
   buildCalibration('charuco-fixed-board'),
-  buildValidation('charuco-moving-board', 'bin', 12),
-  buildValidation('charuco-fixed-board', 'bin'),
+  ...sceneIds.map((scene) => buildValidation('charuco-moving-board', scene, movingSceneFrameCount)),
+  ...sceneIds.map((scene) =>
+    buildValidation('charuco-fixed-board', scene, scene === 'bin' ? validationFrameCount : fixedSceneFrameCount),
+  ),
 ];
 
 console.log(`Demo dataset written to ${outputRoot}`);

@@ -70,323 +70,307 @@
       ]
     },
     {
-      "file": "validation-009.jpg",
-      "t": 0.04712041884816754,
+      "file": "validation-010.jpg",
+      "t": 0.05235602094240838,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "df4ebc5bdc7e87cd8ad6202fec4495edd7035a7cc66dd434bfa5fa37448a5d85",
-      "stripeColumns": 357,
+      "sha256": "2940b40f37ccd345a8b57c9a5db325e8e0eb1c5f9e64ecefa2bd46621c4ef2b1",
+      "stripeColumns": 390,
       "commandPosition": [
-        -0.0857531749341133,
-        0.4003111137586208
+        -0.08331790712041688,
+        0.38082897124904935
       ]
     },
     {
-      "file": "validation-014.jpg",
-      "t": 0.07329842931937172,
+      "file": "validation-015.jpg",
+      "t": 0.07853403141361257,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "1c4d5c02df147b5efb8f87910f2cdb789d2992cc55c5b69dcd4b39386ff82c36",
-      "stripeColumns": 590,
+      "sha256": "f3a43a74802e8c8e60b05906b3b5b79498dd8286a3b3d15d98895e6eade708c6",
+      "stripeColumns": 632,
       "commandPosition": [
-        -0.07357683586563117,
-        0.30290040121076367
+        -0.07114156805193475,
+        0.28341825870119225
       ]
     },
     {
-      "file": "validation-019.jpg",
-      "t": 0.09947643979057591,
+      "file": "validation-020.jpg",
+      "t": 0.10471204188481675,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "8f2da66f0db1e81f40401c0ce21d19dc14645a656575025685b0ae7d2a9f1cbe",
-      "stripeColumns": 637,
+      "sha256": "d303d76e0b2d163e15c4e8c4b0b16f4acf51a862683bb2860f87c191cab11f1f",
+      "stripeColumns": 636,
       "commandPosition": [
-        -0.06140049679714901,
-        0.20548968866290634
+        -0.05896522898345258,
+        0.1860075461533349
       ]
     },
     {
-      "file": "validation-023.jpg",
-      "t": 0.12041884816753927,
+      "file": "validation-024.jpg",
+      "t": 0.1256544502617801,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "0a59c11dd720cf5ec958d537ac23295850ce3d00094e42fc7cccf90f23429dee",
-      "stripeColumns": 637,
+      "sha256": "010fc4daa9cd91fd5c1ce45c596238dca7ea537688a9207dba4ff8824ca78d88",
+      "stripeColumns": 638,
       "commandPosition": [
-        -0.05165942554236328,
-        0.12756111862462052
+        -0.04922415772866685,
+        0.10807897611504906
       ]
     },
     {
-      "file": "validation-028.jpg",
-      "t": 0.14659685863874344,
+      "file": "validation-029.jpg",
+      "t": 0.1518324607329843,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "1dc707e1126e6b937d9a253915950a5e24d0004f853c208db8bccc3b30a90248",
-      "stripeColumns": 947,
+      "sha256": "e50bd0be3b5a28acd1de3bc123a85faf32e4f193cdea08781a4a292ab692bafd",
+      "stripeColumns": 1025,
       "commandPosition": [
-        -0.03948308647388114,
-        0.03015040607676341
+        -0.03704781866018469,
+        0.010668263567191765
       ]
     },
     {
-      "file": "validation-033.jpg",
-      "t": 0.17277486910994763,
+      "file": "validation-034.jpg",
+      "t": 0.17801047120418848,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "5bcada19c1418b77a1b5f832e1e43594db913b5cb33ab35c9cd79dee183c4acc",
-      "stripeColumns": 1047,
+      "sha256": "8fdaabf52263e9ade2e9cd29d2f7dd3cdfabe9ac9c9d2f3393665f5cf0191f09",
+      "stripeColumns": 1050,
       "commandPosition": [
-        -0.027306747405398957,
-        -0.06726030647109407
+        -0.024871479591702543,
+        -0.08674244898066535
       ]
     },
     {
-      "file": "validation-038.jpg",
-      "t": 0.19895287958115182,
+      "file": "validation-039.jpg",
+      "t": 0.20418848167539266,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "8e03e4dfb9b44993613a622068cd334666f13d3d10fca1bc469ef85fd8d9bbc2",
-      "stripeColumns": 1054,
+      "sha256": "0ea71f1b743d17965425e3a93c5cca9e06fef62e3885b0f3316382c8b07aa147",
+      "stripeColumns": 1055,
       "commandPosition": [
-        -0.015130408336916815,
-        -0.1646710190189512
+        -0.01269514052322036,
+        -0.18415316152852285
       ]
     },
     {
-      "file": "validation-042.jpg",
-      "t": 0.2198952879581152,
+      "file": "validation-044.jpg",
+      "t": 0.23036649214659685,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "c575e75ffaed77223de16fed56db27480f6c1be0dc941cda163097949d5b3522",
-      "stripeColumns": 1030,
+      "sha256": "e178e8603148e501ca8d67a76c11b67d7afbe9444aadfdee787bde07057540ed",
+      "stripeColumns": 1031,
       "commandPosition": [
-        -0.005389337082131084,
-        -0.24259958905723705
+        -0.0005188014547382186,
+        -0.28156387407637995
       ]
     },
     {
-      "file": "validation-047.jpg",
-      "t": 0.24607329842931938,
+      "file": "validation-049.jpg",
+      "t": 0.25654450261780104,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "6bfd7f149e6b678fb917b513c981f5465c0ee242967d9f97e153c46b40b04e7b",
-      "stripeColumns": 1018,
+      "sha256": "f842a2e2fe18226c0a41ac49fcb6514ca5de8c41cc4c10cafc310922f8030917",
+      "stripeColumns": 1015,
       "commandPosition": [
-        0.006787001986351099,
-        -0.3400103016050945
+        0.01165753761374392,
+        -0.37897458662423705
       ]
     },
     {
-      "file": "validation-052.jpg",
-      "t": 0.27225130890052357,
+      "file": "validation-054.jpg",
+      "t": 0.28272251308900526,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "041596fe58c0fa92b6e4f9c9b3fbb626868af75290fbb7f95121a1829db13b6d",
-      "stripeColumns": 1014,
+      "sha256": "937338a7e46c0d87516c0084f90fa12ef5d28ca6653872cf5f9b004195cdf296",
+      "stripeColumns": 923,
       "commandPosition": [
-        0.018963341054833244,
-        -0.43742101415295165
+        0.023833876682226106,
+        -0.47638529917209455
       ]
     },
     {
-      "file": "validation-056.jpg",
-      "t": 0.2931937172774869,
+      "file": "validation-059.jpg",
+      "t": 0.3089005235602094,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "248bf32fb1c08c8440bb2a522f86ca96a14775f251a06c16f2ba0556e2679e0b",
-      "stripeColumns": 841,
+      "sha256": "5285fb5294c701451e6a5ca11e11408ced948d1f97f8217131f09147e253928b",
+      "stripeColumns": 718,
       "commandPosition": [
-        0.02870441230961892,
-        -0.5153495841912371
+        0.03601021575070825,
+        -0.5737960117199518
       ]
     },
     {
-      "file": "validation-061.jpg",
-      "t": 0.3193717277486911,
+      "file": "validation-064.jpg",
+      "t": 0.33507853403141363,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "d831d1e5bb0671948641bbe8a58a1e848dff39e5cb5cbcaddda132d5b5c89679",
-      "stripeColumns": 716,
+      "sha256": "dab60a16ed8b19395b9672d9c2958e801b0091b1f3055e7664009ce122025799",
+      "stripeColumns": 715,
       "commandPosition": [
-        0.040880751378101106,
-        -0.6127602967390946
+        0.04818655481919038,
+        -0.6712067242678088
       ]
     },
     {
-      "file": "validation-066.jpg",
-      "t": 0.34554973821989526,
+      "file": "validation-069.jpg",
+      "t": 0.3612565445026178,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "0c06ecb615addded531130d1489b1429ceac5c04517d63f8fda52fdd1d94c553",
-      "stripeColumns": 716,
+      "sha256": "b1e95c64129dc920efb4f87fc66a10eccc229b937de1fa6f3bccfc8de296881c",
+      "stripeColumns": 717,
       "commandPosition": [
-        0.05305709044658329,
-        -0.7101710092869521
+        0.06036289388767257,
+        -0.7686174368156663
       ]
     },
     {
-      "file": "validation-070.jpg",
-      "t": 0.36649214659685864,
+      "file": "validation-073.jpg",
+      "t": 0.38219895287958117,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "e4e78a81fa30c8f0f22084b6d618cd54464774ddcd4bdf637a0f00b0074b5829",
-      "stripeColumns": 720,
+      "sha256": "3afb06d606b85097722f62975ee75d36ef0613572fb8f4724356c38f0794998a",
+      "stripeColumns": 723,
       "commandPosition": [
-        0.06279816170136904,
-        -0.788099579325238
+        0.07010396514245831,
+        -0.8465460068539522
       ]
     },
     {
-      "file": "validation-075.jpg",
-      "t": 0.39267015706806285,
+      "file": "validation-078.jpg",
+      "t": 0.4083769633507853,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "f23e5d7b87532f44b5d03d70c1aa4a3412c4b02bda168460d4d559de0c7fedb0",
-      "stripeColumns": 722,
+      "sha256": "c4223d4bad3dfefa444fbda3134ef81a08cd1e6843ca54d07aa1c1e31b320050",
+      "stripeColumns": 864,
       "commandPosition": [
-        0.07497450076985113,
-        -0.8855102918730947
+        0.08228030421094043,
+        -0.9439567194018093
       ]
     },
     {
-      "file": "validation-080.jpg",
-      "t": 0.418848167539267,
+      "file": "validation-083.jpg",
+      "t": 0.43455497382198954,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "acf4dcbcdb4370cd22d3900f7ea8683014361097788a6ec8c4e925437de3ce13",
-      "stripeColumns": 978,
+      "sha256": "1d7fabf75a7a2e24dae9c0b14955286c0e59e30b1b4780114439b1f219e70605",
+      "stripeColumns": 1084,
       "commandPosition": [
-        0.0871508398383333,
-        -0.9829210044209522
+        0.09445664327942258,
+        -1.0413674319496662
       ]
     },
     {
-      "file": "validation-084.jpg",
-      "t": 0.4397905759162304,
+      "file": "validation-088.jpg",
+      "t": 0.4607329842931937,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "6a9efbf599bb2b9ef4cfeedbb341565e0c8f181af28bcf625bf6dfe26334db27",
-      "stripeColumns": 1083,
+      "sha256": "ddd1787e3ca087a698d3f062fc398f8db9b183a8895b1a4c1fe97899e9a48e0a",
+      "stripeColumns": 1090,
       "commandPosition": [
-        0.09689191109311904,
-        -1.0608495744592379
+        0.10663298234790478,
+        -1.1387781444975238
       ]
     },
     {
-      "file": "validation-089.jpg",
-      "t": 0.46596858638743455,
+      "file": "validation-093.jpg",
+      "t": 0.4869109947643979,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "95db9cdb8db6758730d22a0b9c0ecae76444017e6fca0b33b6661c2a10a86862",
-      "stripeColumns": 1088,
-      "commandPosition": [
-        0.10906825016160118,
-        -1.158260287007095
-      ]
-    },
-    {
-      "file": "validation-094.jpg",
-      "t": 0.49214659685863876,
-      "command": 0,
-      "translation": [
-        0,
-        0,
-        0
-      ],
-      "sha256": "189f2bc6863a528b6199655ae7ae5fa0077b4d6b5fd81fb720a1d14c9a38b3df",
+      "sha256": "12f2e6e1006ae0604c72c94a2bd7ef82b313756e6b393884619385e032de8cac",
       "stripeColumns": 1095,
       "commandPosition": [
-        0.12124458923008335,
-        -1.2556709995549524
+        0.11880932141638692,
+        -1.236188857045381
       ]
     },
     {
-      "file": "validation-099.jpg",
-      "t": 0.518324607329843,
+      "file": "validation-098.jpg",
+      "t": 0.5130890052356021,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "2f3a3b3ad11e7b02114767244ede803fd4bffdf90cfe1214d37c45f5296f2a71",
-      "stripeColumns": 1098,
+      "sha256": "217d1d9ae0500e3e257b2646835ab86d44eb86c957ea0fd23ee2bd97f3d1ee00",
+      "stripeColumns": 1101,
       "commandPosition": [
-        0.1334209282985655,
-        -1.3530817121028096
+        0.1309856604848691,
+        -1.3335995695932383
       ]
     },
     {
@@ -438,19 +422,19 @@
       ]
     },
     {
-      "file": "validation-117.jpg",
-      "t": 0.612565445026178,
+      "file": "validation-118.jpg",
+      "t": 0.6178010471204188,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "96df67eb4ef91df5700acdd815a7c27ff1061318ab45b2c946caf0de0b141505",
-      "stripeColumns": 1117,
+      "sha256": "edbe8fc308d69342c847698e326bae46c10b0992a4de64f0fe026e79a34a77c0",
+      "stripeColumns": 1121,
       "commandPosition": [
-        0.17725574894510127,
-        -1.7037602772750957
+        0.17969101675879773,
+        -1.7232424197846674
       ]
     },
     {
@@ -486,195 +470,211 @@
       ]
     },
     {
-      "file": "validation-131.jpg",
-      "t": 0.6858638743455497,
+      "file": "validation-132.jpg",
+      "t": 0.6910994764397905,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "ff91c94199392e6f9b9b18b7fbb66211850fa47744ef33a6e2a231c75c26c4f6",
+      "sha256": "f7b7945c420c9e0d38d644e976a205359ebc271609b25c16556622d5ca3032fb",
       "stripeColumns": 1153,
       "commandPosition": [
-        0.21134949833685138,
-        -1.9765102724090966
+        0.21378476615054784,
+        -1.9959924149186683
       ]
     },
     {
-      "file": "validation-136.jpg",
-      "t": 0.7120418848167539,
+      "file": "validation-137.jpg",
+      "t": 0.7172774869109948,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "b5024325c3443aa30f9508c827ce76f4ffce9caa2dd2661fbd93fc6928769d82",
-      "stripeColumns": 1157,
+      "sha256": "54a47096ad0519c232ce37da930618796bdf658ada0192267287a2ae17b6bd4c",
+      "stripeColumns": 1155,
       "commandPosition": [
-        0.22352583740533347,
-        -2.0739209849569535
+        0.22596110521902993,
+        -2.0934031274665252
       ]
     },
     {
-      "file": "validation-141.jpg",
-      "t": 0.7382198952879581,
+      "file": "validation-142.jpg",
+      "t": 0.743455497382199,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "173eba9a362189c5204b51873a4211befb468b83de37a54541bfc3ae5266d41a",
-      "stripeColumns": 1208,
+      "sha256": "de7d24b50cf125b0eb8d54b61940b7f2d40d1b090a3c5bfe9243c1f8e6f595e2",
+      "stripeColumns": 1211,
       "commandPosition": [
-        0.23570217647381567,
-        -2.171331697504811
+        0.23813744428751213,
+        -2.190813840014383
       ]
     },
     {
-      "file": "validation-145.jpg",
-      "t": 0.7591623036649214,
+      "file": "validation-147.jpg",
+      "t": 0.7696335078534031,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "ce4923ab3c589d4ca24ed98fe24ddc2f1be0bf7a54d6f79a51e186088f0fa6b9",
-      "stripeColumns": 1217,
+      "sha256": "520934c05196780cb4286489bee700d8d65e2b03c5050cc489f6aa723956c782",
+      "stripeColumns": 1220,
       "commandPosition": [
-        0.2454432477286014,
-        -2.249260267543097
+        0.25031378335599425,
+        -2.28822455256224
       ]
     },
     {
-      "file": "validation-150.jpg",
-      "t": 0.7853403141361257,
+      "file": "validation-152.jpg",
+      "t": 0.7958115183246073,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "90d44d0ce42ec9dbff681bf5a4b73a545be8e0f124965fcd07cd24638b5c86a9",
-      "stripeColumns": 565,
+      "sha256": "a886c047592cff82642813c82e4c38ce1d26dbfc9358ce23f76174b81b2e97f3",
+      "stripeColumns": 490,
       "commandPosition": [
-        0.25761958679708347,
-        -2.3466709800909538
+        0.26249012242447634,
+        -2.3856352651100967
       ]
     },
     {
-      "file": "validation-155.jpg",
-      "t": 0.8115183246073299,
+      "file": "validation-157.jpg",
+      "t": 0.8219895287958116,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "18104e15b5ae71945316a9c9dcd89c80ff224156e500a52cbdda970e4461bcab",
-      "stripeColumns": 389,
+      "sha256": "ac367982d5f7440fc31346a6fc1c5dfa2a2456b83f9975e9a51ca2e8bc2ecc50",
+      "stripeColumns": 237,
       "commandPosition": [
-        0.2697959258655657,
-        -2.444081692638812
+        0.27466646149295854,
+        -2.4830459776579543
       ]
     },
     {
-      "file": "validation-160.jpg",
-      "t": 0.837696335078534,
+      "file": "validation-162.jpg",
+      "t": 0.8481675392670157,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "bf36d1133317dfbe8de696e597fc3d577986ecf7bc9fe5799a27841a3689bc36",
-      "stripeColumns": 156,
+      "sha256": "280da48d94a1ce62ef0278ff028b337c1af7475701fcb7aa45a7755179a81b40",
+      "stripeColumns": 150,
       "commandPosition": [
-        0.2819722649340478,
-        -2.5414924051866685
+        0.28684280056144074,
+        -2.580456690205812
       ]
     },
     {
-      "file": "validation-164.jpg",
-      "t": 0.8586387434554974,
+      "file": "validation-167.jpg",
+      "t": 0.8743455497382199,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "7a0274f8d7014ca737e299397e2b652c71ec3c3525063365e861ef4ca029ea42",
-      "stripeColumns": 144,
-      "commandPosition": [
-        0.29171333618883355,
-        -2.6194209752249544
-      ]
-    },
-    {
-      "file": "validation-169.jpg",
-      "t": 0.8848167539267016,
-      "command": 0,
-      "translation": [
-        0,
-        0,
-        0
-      ],
-      "sha256": "c42c7979cff5c882e152afd57f6bef149cfaa62f38272c509205d7039d4f11ae",
+      "sha256": "49b778110c40287bd52fe0e6ba080643c3f7d3003053fa519650b1e85891bb2a",
       "stripeColumns": 138,
       "commandPosition": [
-        0.30388967525731575,
-        -2.716831687772812
+        0.2990191396299228,
+        -2.6778674027536686
       ]
     },
     {
-      "file": "validation-174.jpg",
-      "t": 0.9109947643979057,
+      "file": "validation-171.jpg",
+      "t": 0.8952879581151832,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "f44e5b9baf1d6e6036549a190d324086af7f1fade8246cb77703303cc080eddf",
-      "stripeColumns": 131,
+      "sha256": "f937c002dda5322f42370d305dc2ef2e65e06d60745a4f3effd884ed92f08f6b",
+      "stripeColumns": 138,
       "commandPosition": [
-        0.31606601432579784,
-        -2.8142424003206687
+        0.30876021088470856,
+        -2.7557959727919545
       ]
     },
     {
-      "file": "validation-178.jpg",
-      "t": 0.9319371727748691,
+      "file": "validation-176.jpg",
+      "t": 0.9214659685863874,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "2a6d4e59afb0da43f42ede2b636defa7ac67643323ad105f3d9cd80a55d7e2e3",
-      "stripeColumns": 1248,
+      "sha256": "0b1aa40a923cfa6c5ab909d1fe741f82bee8bf11b0bd824eac96a33479cd314e",
+      "stripeColumns": 1246,
       "commandPosition": [
-        0.3258070855805836,
-        -2.8921709703589547
+        0.32093654995319076,
+        -2.853206685339812
       ]
     },
     {
-      "file": "validation-183.jpg",
-      "t": 0.9581151832460733,
+      "file": "validation-181.jpg",
+      "t": 0.9476439790575916,
       "command": 0,
       "translation": [
         0,
         0,
         0
       ],
-      "sha256": "0983eda451b8295d6ccc72a0b39bd1a10c9459a270f55da7bb839af42a0d3b36",
-      "stripeColumns": 1252,
+      "sha256": "c72f44de1c49701f324304894e499087b08b9e2b132a299d9d563615708c1096",
+      "stripeColumns": 1250,
       "commandPosition": [
-        0.3379834246490657,
-        -2.989581682906812
+        0.3331128890216729,
+        -2.9506173978876693
+      ]
+    },
+    {
+      "file": "validation-186.jpg",
+      "t": 0.9738219895287958,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "5f4f4e42e3655dc8a121d5859a57cb59b407139cdc57514e0ab4b786617231ae",
+      "stripeColumns": 1256,
+      "commandPosition": [
+        0.345289228090155,
+        -3.048028110435526
+      ]
+    },
+    {
+      "file": "validation-191.jpg",
+      "t": 1,
+      "command": 0,
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "sha256": "06db942768542c6b64e4a5573db28a57e17e455cdb2c7efed0085459b653b534",
+      "stripeColumns": 1260,
+      "commandPosition": [
+        0.3574655671586372,
+        -3.1454388229833836
       ]
     }
   ],
