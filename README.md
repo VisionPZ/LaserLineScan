@@ -16,6 +16,14 @@ upload, no telemetry. The frames, the calibration and the point cloud never leav
 the browser. The project exists so that the whole pipeline can be studied,
 modified and used without a proprietary component hidden behind an API.
 
+## What this reference case demonstrates
+
+This lab exposes how optical choices, calibration, stripe detection and geometric constraints change a 3D result. It runs locally with **synthetic captures** and compares reconstruction against their reference depth. Its reported shape error is a demo validation metric, **not physical scanner accuracy**. Coverage is an aggregate ratio of expected scan columns with comparable measurements, **not surface-area completeness**.
+
+**Choose your next step:** [Explore the live lab](https://www.nidvue.com/laser-line-scan/) · [Read the method](https://www.nidvue.com/articles/laser-line-scan-defect-inspection/) · [Discuss a real visual measurement problem](https://www.nidvue.com/engagement/#project-brief)
+
+If your own inspection or perception pipeline has unreliable detections, uncertain calibration or missing measurements, the project brief asks for the task, available evidence and desired decision. There is no dataset upload in this lab or brief.
+
 ## Quick start
 
 **Hosted demo, no install:** [English](https://www.nidvue.com/laser-line-scan/) · [中文](https://www.nidvue.com/zh/laser-line-scan/). The hosted lab and this package share the processing pipeline; the package includes smaller demonstration capture sequences, so results need not match a hosted run. The technical article is available in [English](https://www.nidvue.com/articles/laser-line-scan-defect-inspection/) and [中文](https://www.nidvue.com/zh/articles/laser-line-scan-defect-inspection/).
@@ -282,6 +290,12 @@ documentation and the source headers:
 See [`docs/COMMERCIAL-USE.md`](docs/COMMERCIAL-USE.md) for the plain-language
 explanation and contact
 [contact@nidvue.com](mailto:contact@nidvue.com) with licensing questions.
+
+## From reconstruction to visual-data quality
+
+Laser Line Scan is a **Nidvue reference application**: a measured result is traceable through captures, optics, calibration, stripe detection, geometric search and evaluation. The same evidence-first approach can guide an assessment of industrial inspection or robotic perception data. A real system still needs its own representative captures, hardware validation and acceptance criteria.
+
+[Bring a visual-data quality problem to Nidvue →](https://www.nidvue.com/engagement/#project-brief)
 
 ## Contributing
 
