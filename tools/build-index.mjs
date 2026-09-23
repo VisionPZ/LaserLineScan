@@ -33,6 +33,12 @@ const escape = (s) => s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replace
 // The generated content stores each string's translations in a fixed order;
 // English is first (see tools/laser/build-page.mjs).
 const strings = Object.fromEntries(Object.entries(copy).map(([key, values]) => [key, values[0]]));
+Object.assign(strings, {
+  headline: 'Can you trust the visual data behind your 3D measurements?',
+  lead: 'Explore how optics, calibration and stripe detection affect a reconstructed point cloud. The included captures are synthetic.',
+  coverage: 'Scored-column coverage',
+  metricsHelp: 'Shape error compares the reconstructed points with reference depth from synthetic captures. Scored-column coverage counts expected columns with reference-comparable measurements, not surface area.',
+});
 
 const calibrationIds = ['charuco-moving-board', 'charuco-fixed-board'];
 // Every scene the demo ships gets a card: its frames and preview exist in this
@@ -91,6 +97,14 @@ let fragment = template
   })
   .replace('__COPY_JSON__', JSON.stringify(strings).replaceAll('<', '\\u003c'));
 
+// Keep the standalone package's conversion path and evidence explanation when rebuilding.
+const replaceOnce = (source, before, after) => {
+  if (source.split(before).length !== 2) throw new Error(`Expected exactly one page marker: ${before.slice(0, 60)}`);
+  return source.replace(before, after);
+};
+fragment = replaceOnce(fragment, '</p></div>\n    <img class="ll-hero-mascot"', '</p><p class="ll-hero-paths"><a href="#ll-setup-heading">Explore the five-stage lab →</a><a href="https://www.nidvue.com/engagement/#project-brief">Discuss a visual measurement problem →</a></p><p class="ll-evidence-note">Browser-only reference case · Synthetic captures · No upload</p></div>\n    <img class="ll-hero-mascot"');
+fragment = replaceOnce(fragment, '    <div class="ll-step-actions"><button id="ll-back-validation"', '    <aside class="ll-audit-bridge ll-panel" aria-labelledby="ll-audit-bridge-title"><p class="ll-eyebrow">NIDVUE / REFERENCE CASE</p><h3 id="ll-audit-bridge-title">What can you trust about this result?</h3><p>The error compares this reconstruction with reference depth from synthetic captures. Coverage counts expected scan columns that produced reference-comparable measurements; it is not the fraction of the object surface measured. Neither metric establishes physical scanner accuracy.</p><p>Have real inspection or perception data with uncertain calibration, missing coverage or unstable detections? Bring one concrete case and the evidence you already have. We can define a focused assessment and the measurements needed to make a decision.</p><p><a href="https://www.nidvue.com/engagement/#project-brief">Discuss a visual-data assessment →</a> <span aria-hidden="true">·</span> <a href="https://www.nidvue.com/articles/laser-line-scan-defect-inspection/">Read how the result is evaluated →</a></p></aside>\n    <div class="ll-step-actions"><button id="ll-back-validation"');
+
 // The demo ships no dataset ZIP archives, so the download rows are removed from
 // the static markup; the runtime guards the matching DOM lookups.
 fragment = fragment.replace(/<div class="ll-downloads">.*?<\/div>/g, '');
@@ -129,7 +143,8 @@ for (const [id, lines] of [...calibrationIds.map((rig) => [rig, demoFrames.calib
 // The stylesheet link is hoisted into <head>; the tokens below are the same
 // locked design tokens the website emits (assembly/design/tokens.ts).
 fragment = fragment.replace('<link rel="stylesheet" href="runtime/lab.css">\n', '');
-const tokens = `:root{
+const tokens = `.ll-hero-paths{display:flex;flex-wrap:wrap;gap:10px 22px;margin:16px 0 4px}.ll-hero-paths a,.ll-audit-bridge a{color:var(--accent);font-weight:600;text-underline-offset:3px}.ll-evidence-note{font-size:.86rem;color:var(--muted)}.ll-audit-bridge{margin:24px 0;padding:24px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}.ll-audit-bridge h3{font-size:1.2rem}.ll-audit-bridge p{max-width:80ch}
+:root{
   --brand:#5857E8; --brand-deep:#3837A8; --brand-soft:#A09FFF;
   --fog:#E8EAF2; --stone:#C8BFB2; --bearing:#00A98F;
   --mint:#00A98F; --warn:#D9A400; --fail:#D64545;
